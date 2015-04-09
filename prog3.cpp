@@ -1,11 +1,6 @@
-#include <qtimagelib.h>
-#include "DanProcessor.h"
-#include "DerekProcessor.h"
-#include "ImageLibProcessor.h"
-
 /*****************************************************************
 
-Program: Prog1 (Point Processes)
+Program: Prog3 (Image Restoration)
 
 Class: CSC 442, Introduction to Image Processing
 
@@ -15,24 +10,24 @@ Meeting Time & Place: 9:00 am M-W-F in McLaury 305
 
 Authors: Derek Stotz, Dan Andrus (QtImageLib by Dr. John Weiss)
 
-Last Modified: Feb 6, 2015
+Last Modified: Apr 26, 2015
 
 Compiling: Run qmake to compile.
 
-Usage:   ./prog1
+Usage:   ./prog3
 
-Details - The purpose of this assignment was to implement most of the point
- *         processess described in class.  While the GUI elements were provided
- *         by Qt and QtImageLib, the only code we had to implement was for
- *         modifying the images themselves.  Each function of ours was passed
+Details - The purpose of this assignment was to implement many of the image
+ *         restoration techniques described in class.  Since the GUI elements
+ *         were provided by Qt and QtImageLib, the only code we had to implement
+ *         was for modifying the images themselves.  Each function of ours was passed
  *         a QtImageLib image, which acted as a 2 dimensional vector of pixel
- *         information.  We were able to either generate and analyze the image
- *         histogram to modify the intensity distributions or simply modify each
- *         individual pixel value to implement the point proccesses required.
-
- *         We split our work roughly in half.  Dan's processes are under a different
- *         Menu than Derek's, and the ImageLib functions which we used for reference
- *         remain under and Image Lib menu.
+ *         information.  We were able to then apply our transformations and filters to
+ *         the image data.  Generally, we would use a fourier transform to move the image
+ *         into the frequency domain, then filter the information (or add noise) before
+ *         transforming it back through a reverse fourier transform.
+ *
+ *         We split our work roughly in half.  The restoration filters were all put under a single
+ *         menu, while the noise and smoothing functions were given their own menu.
 
 
  Recommended Usage -
@@ -40,14 +35,12 @@ Details - The purpose of this assignment was to implement most of the point
  *           found under the two menus.  To reset the image, press the back arrow in the
  *           image window.
 
- Issues and Bugs - Our histogram equalization gives slightly (barely detectably) different
- *           results from the ImageLib equalization.  Actually, in some cases of clipping
- *           values between 0 and 1, our equalization worked correctly while the ImageLib
- *           equalization only gave partially equalized results.
- *
- *           Some processes are not included in the ImageLibProcessor, but this was not
- *           required and we were merely using it for reference.
+ Issues and Bugs - No Bugs or Issues to speak of.
  *****************************************************************/
+
+#include <qtimagelib.h>
+#include "Filters.h"
+#include "NoiseSmoothing.h"
 
 /***************************************************************************//**
  * main
@@ -64,14 +57,12 @@ Details - The purpose of this assignment was to implement most of the point
  ******************************************************************************/
 int main(int argc, char** argv)
 {
-  DanProcessor dan;
-  DerekProcessor derek;
-  ImageLibProcessor ilp;
+  Filters f;
+  NoiseSmoothing ns;
   ImageApp app(argc, argv);
 
-  app.AddActions(&dan);
-  app.AddActions(&derek);
-  app.AddActions(&ilp);
+  app.AddActions(&f);
+  app.AddActions(&ns);
   return app.Start();
 }
 
