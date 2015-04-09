@@ -1,12 +1,11 @@
 /***************************************************************************//**
- * DerekProcessor.cpp
+ * Filters.cpp
  *
  * Author - Derek Stotz
  *
- * Date - January 30, 2015
+ * Date - April 8, 2015
  *
- * Point process functions implemented by Derek Stotz.  These functions are
- * named for easy addition into the image app created in prog1.cpp.
+ * Method declarations for the Filters class.
  ******************************************************************************/
 
 #include "DerekProcessor.h"
@@ -15,6 +14,84 @@
 #include <qfiledialog.h>
 #include <stdlib.h>
 
-bool Filters::Menu_Filters_WienerFilter(Image& image);
-bool Filters::Menu_Filters_InverseFilter(Image& image);
-bool Filters::Menu_Filters_BandRejectFilter(Image& image);
+/***************************************************************************//**
+ * Menu_Filters_FourierTransform
+ * Author - Derek Stotz
+ *
+ * Applies the fast Fourier transform to an image and normalizes the resulting
+ * frequency data to be displayed to the user. Overwrites the original image.
+ *
+ * Parameters -
+ *          image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_Filters_FourierTransform(Image& image)
+{
+  // TODO
+  return false;
+}
+
+/***************************************************************************//**
+ * Menu_Filters_WienerFilter
+ * Author - Derek Stotz
+ *
+ *
+ *
+ *
+ *
+ * Parameters -
+ *          image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_Filters_WienerFilter(Image& image)
+{
+  // TODO
+  return false;
+}
+
+/***************************************************************************//**
+ * Menu_Filters_InverseFilter
+ * Author - Derek Stotz
+ *
+ *
+ *
+ *
+ *
+ * Parameters -
+ *          image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_Filters_InverseFilter(Image& image)
+{
+  // TODO
+  return false;
+}
+
+/***************************************************************************//**
+ * Menu_Filters_BandRejectFilter
+ * Author - Derek Stotz
+ *
+ * Applies a band-reject filter on an image. Prompts the user to enter a lower
+ * bound between 0 and 1 and an upper bound between 0 and 1. The image will then
+ * be run through the Fourier transform and a band reject filter will be applied
+ * to it so that all data between the lower and upper bound is erased. The image
+ * is then run through the inverse Fourier transform.
+ *
+ * Parameters -
+ *          image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_Filters_BandRejectFilter(Image& image)
+{
+  // TODO
+  return false;
+}
+
