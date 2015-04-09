@@ -1,40 +1,34 @@
 /***************************************************************************//**
- * DerekProcessor.h
+ * Filters.h
  *
  * Author - Derek Stotz
  *
- * Date - January 30, 2015
+ * Date - April 8, 2015
  *
- * Details - Contains the declaration for the DerekProcessor class.
- *
+ * Details - Contains the declaration for the Filters class.
  ******************************************************************************/
 
 #pragma once
 #include <qtimagelib.h>
 
 /***************************************************************************//**
- * DerekPreprocessor
+ * Filters
  *
  * Author - Derek Stotz
  *
  * Child of QObject class.
  *
- * Declares various point processes that can be applied to images using QT.
- * Allows users to apply Gamma and Log transforms, view image histograms,
- * apply continuous pseudocolors, subtract other images from the selected image,
- * and apply contrast stretches.
+ * This class is responsible for applying filters to images using the fourier
+ * transforms. All filters defined in this class primarily operate in the
+ * frequency domain. 
  ******************************************************************************/
 class DerekProcessor : public QObject
 {
   Q_OBJECT;
 
   public slots:
-    bool Menu_DerekFunctions_ApplyGamma(Image& image);
-    bool Menu_DerekFunctions_ApplyLogTransform(Image& image);
-    bool Menu_DerekFunctions_DisplayImageHistogram(Image& image);
-    bool Menu_DerekFunctions_ApplyContinuousPseudocolor(Image& image);
-    bool Menu_DerekFunctions_SubtractImage(Image& image);
-    bool Menu_DerekFunctions_AutoContrastStretch(Image& image);
-    bool Menu_DerekFunctions_ModifiedContrastStretch(Image& image);
+    bool Menu_Filters_WienerFilter(Image& image);
+    bool Menu_Filters_InverseFilter(Image& image);
+    bool Menu_Filters_BandRejectFilter(Image& image);
 };
 
