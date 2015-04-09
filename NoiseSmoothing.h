@@ -1,12 +1,11 @@
 /***************************************************************************//**
- * DanProcessor.h
+ * NoiseSmoothing.h
  *
- * Author - Dan Andrus
+ * Author - Daniel Andrus
  *
- * Date - January 30, 2015
+ * Date - April 8, 2015
  *
- * Details - Contains the declaration for the DanProcessor class.
- *
+ * Details - Contains the declaration for the NoiseSmoothing class.
  ******************************************************************************/
 
 #pragma once
@@ -14,29 +13,21 @@
 #include <iostream>
 
 /***************************************************************************//**
- * DanPreprocessor
+ * NoiseSmoothing
  *
- * Author - DanAndrus
+ * Author - Daniel Andrus
  *
  * Child of QObject class.
  *
- * Declares various point processes that can be applied to images using QT.
- * Allows users to negate, posterize, and brighten images, as well as apply
- * binary threshold, linear contrast, and 8-level pseudocolor processes.
+ * This class is responsible for generating different types of noise and
+ * applying smoothing filters to images.
  ******************************************************************************/
 class DanProcessor : public QObject
 {
   Q_OBJECT;
   
   public slots:
-    bool Menu_DanFunctions_Negate(Image& image);
-    bool Menu_DanFunctions_Grayscale(Image& image);
-    bool Menu_DanFunctions_BinaryThreshold(Image& image);
-    bool Menu_DanFunctions_Posterize(Image& image);
-    bool Menu_DanFunctions_Brighten(Image& image);
-    bool Menu_DanFunctions_LinearContrast(Image& image);
-    bool Menu_DanFunctions_8LevelPseudocolor(Image& image);
-    bool Menu_DanFunctions_Equalize(Image& image);
-    bool Menu_DanFunctions_EqualizeWithClipping(Image& image);
+    bool Menu_NoiseAndSmoothing_Smooth(Image& image);
+    bool Menu_NoiseAndSmoothing_PeriodicNoise(Image& image);
 };
 
