@@ -12,7 +12,7 @@
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool FourierTransform(Image& image)
+bool FourierTransform(Image& image, int ** frequencies)
 {
 
 }
@@ -29,7 +29,7 @@ bool FourierTransform(Image& image)
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool InverseFourierTransform(Image& image)
+bool InverseFourierTransform(Image& image, int ** frequencies)
 {
 
 }

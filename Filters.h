@@ -22,7 +22,7 @@
  * transforms. All filters defined in this class primarily operate in the
  * frequency domain. 
  ******************************************************************************/
-class DerekProcessor : public QObject
+class Filters : public QObject
 {
   Q_OBJECT;
 

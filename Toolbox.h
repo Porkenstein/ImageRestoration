@@ -13,5 +13,5 @@
 #include <qtimagelib.h>
 #include <iostream>
 
-bool FourierTransform(Image& image);
-bool InverseFourierTransform(Image& image);
+bool FourierTransform(Image& image, int ** frequencies);
+bool InverseFourierTransform(Image& image, int ** frequencies);

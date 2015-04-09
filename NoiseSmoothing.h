@@ -22,7 +22,7 @@
  * This class is responsible for generating different types of noise and
  * applying smoothing filters to images.
  ******************************************************************************/
-class DanProcessor : public QObject
+class NoiseSmoothing : public QObject
 {
   Q_OBJECT;
   
