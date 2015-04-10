@@ -8,3 +8,5 @@ SOURCES += \
     Filters.cpp \
     prog3.cpp \
     Toolbox.cpp
+
+CONFIG += qtimagelib
