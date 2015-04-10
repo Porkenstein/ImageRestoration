@@ -14,7 +14,17 @@
  ******************************************************************************/
 bool FourierTransform(Image& image, int ** frequencies)
 {
-
+    for (int r = 0; r < image.Height(); r++)
+    {
+        for (int c = 0; c < image.Height(); c++)
+        {
+            frequencies[r][c] = 0;
+            for (int i = 0; i <image.Width(); i++)
+            {
+                frequencies[r][c] += image[r][c].Intensity() * pow(M_E, M_I * 2 * M_PI * c * i / image.Width());
+            }
+        }
+    }
 }
 
 /***************************************************************************//**

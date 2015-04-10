@@ -12,6 +12,10 @@
 #pragma once
 #include <qtimagelib.h>
 #include <iostream>
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <complex>
+
 
 bool FourierTransform(Image& image, int ** frequencies);
 bool InverseFourierTransform(Image& image, int ** frequencies);

@@ -8,7 +8,7 @@
  * Method declarations for the Filters class.
  ******************************************************************************/
 
-#include "DerekProcessor.h"
+#include "Filters.h"
 #include <cmath>
 #include <string>
 #include <qfiledialog.h>
