@@ -26,13 +26,9 @@
 bool Filters::Menu_Filters_FourierTransform(Image& image)
 {
   // allocate the frequency array
-  unsigned int i, c, r;
+  unsigned int i, r, c;
 
-  double ** frequencies = new double*[image.Height()];
-  for (i = 0; i < image.Height(); i++)
-  {
-      frequencies[i] = new double[image.Width()];
-  }
+  double ** frequencies = alloc2d(image.Height(), image.Width());
 
   // transform to the frequency domain
   FourierTransform(image, frequencies);
@@ -40,34 +36,30 @@ bool Filters::Menu_Filters_FourierTransform(Image& image)
   // find the min and max for normalization
   double fmin = log(frequencies[0][0]);
   double fmax = log(frequencies[0][0]);
-  for (c = 0; c < image.Width(); c++)
+  for (r = 0; r < image.Height(); r++)
   {
-      for (r = 0; r < image.Height(); r++)
+      for (c = 0; c < image.Width(); c++)
       {
-        frequencies[c][r] = log(frequencies[c][r]);
-        if(frequencies[c][r] < fmin)
-            fmin = frequencies[c][r];
-        if(frequencies[c][r] > fmax)
-            fmax = frequencies[c][r];
+        frequencies[r][c] = log(frequencies[r][c]);
+        if(frequencies[r][c] < fmin)
+            fmin = frequencies[r][c];
+        if(frequencies[r][c] > fmax)
+            fmax = frequencies[r][c];
       }
   }
   double scalar = (fmax - fmin) / 256.0;
 
   // normalize and create a new frequency image
-  for (c = 0; c < image.Width(); c++)
+  for (r = 0; r < image.Height(); r++)
   {
-      for (r = 0; r < image.Height(); r++)
+      for (c = 0; c < image.Width(); c++)
       {
-        image[c][r].SetIntensity((frequencies[c][r] - fmin) * scalar);
+        image[r][c].SetIntensity((frequencies[r][c] - fmin) * scalar);
       }
   }
   
   // Free our array
-  for (i = 0; i < image.Height(); i++)
-  {
-    delete [] frequencies[i];
-  }
-  delete [] frequencies;
+  dealloc2d(frequencies, image.Height());
   
   return true;
 }

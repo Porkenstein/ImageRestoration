@@ -20,15 +20,9 @@ void FourierTransform(Image& image, double ** frequencies)
     unsigned int i, r, c;
     
     // Allocate 2D arrays
-    double ** real = new double * [image.Height()];
-    double ** imag = new double * [image.Height()];
-    double ** i_frequencies = new double * [image.Height()];
-    for (i = 0; i < image.Height(); i++)
-    {
-        real[i] = new double[image.Width()];
-        imag[i] = new double[image.Width()];
-        i_frequencies[i] = new double[image.Width()];
-    }
+    double ** real = alloc2d(image.Height(), image.Width());
+    double ** imag = alloc2d(image.Height(), image.Width());
+    double ** i_frequencies = alloc2d(image.Height(), image.Width());
 
     // Perform Fourier transform along the rows
     for (r = 0; r < image.Height(); r++)
@@ -63,15 +57,9 @@ void FourierTransform(Image& image, double ** frequencies)
     }
     
     // Deallocate 2D arrays
-    for (i = 0; i < image.Height(); i++)
-    {
-        delete [] real[i];
-        delete [] imag[i];
-        delete [] i_frequencies[i];
-    }
-    delete [] real;
-    delete [] imag;
-    delete [] i_frequencies;
+    dealloc2d(real, image.Height());
+    dealloc2d(imag, image.Height());
+    dealloc2d(i_frequencies, image.Height());
 }
 
 /***************************************************************************//**
@@ -94,15 +82,9 @@ void InverseFourierTransform(Image& image, double ** frequencies)
     unsigned int i, r, c;
     
     // Allocate 2D arrays
-    double ** real = new double * [image.Height()];
-    double ** imag = new double * [image.Height()];
-    double ** i_frequencies = new double * [image.Height()];
-    for (i = 0; i < image.Height(); i++)
-    {
-        real[i] = new double[image.Width()];
-        imag[i] = new double[image.Width()];
-        i_frequencies[i] = new double[image.Width()];
-    }
+    double ** real = alloc2d(image.Height(), image.Width());
+    double ** imag = alloc2d(image.Height(), image.Width());
+    double ** i_frequencies = alloc2d(image.Height(), image.Width());
     
     // Perform inverse Fourier transform along the rows
     for (r = 0; r < image.Height(); r++)
@@ -141,14 +123,51 @@ void InverseFourierTransform(Image& image, double ** frequencies)
     }
     
     // Deallocate 2D arrays
-    for (i = 0; i < image.Height(); i++)
-    {
-        delete [] real[i];
-        delete [] imag[i];
-        delete [] i_frequencies[i];
-    }
-    delete [] real;
-    delete [] imag;
-    delete [] i_frequencies;
+    dealloc2d(real, image.Height());
+    dealloc2d(imag, image.Height());
+    dealloc2d(i_frequencies, image.Height());
+}
+
+/***************************************************************************//**
+ * alloc2d
+ * Author - Dan Andrus
+ *
+ * Dynamically allocates a 2-dimensional array of doubles. Resulting array is
+ * row-major.
+ *
+ * Parameters -
+ *          rows - the number of rows in the array
+ *          columns - the number of columns per row
+ *
+ * Returns
+ *          The pointer into the array
+ ******************************************************************************/
+double** alloc2d(int rows, int columns)
+{
+  double** array = new double*[rows];
+  for (int i = 0; i < rows; i++)
+  {
+    array[i] = new double[columns];
+  }
+  return array;
+}
+
+/***************************************************************************//**
+ * dealloc2d
+ * Author - Dan Andrus
+ *
+ * Dynamically deallocates a 2-dimensional array of doubles.
+ *
+ * Parameters -
+ *          array - The pointer to the array to deallocate
+ *          rows - the number of rows in the array
+ ******************************************************************************/
+void dealloc2d(double** array, int rows)
+{
+  for (int i = 0; i < rows; i++)
+  {
+    delete [] array[i];
+  }
+  delete [] array;
 }
 
