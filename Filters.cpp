@@ -26,8 +26,10 @@
 bool Filters::Menu_Filters_FourierTransform(Image& image)
 {
   // allocate the frequency array
+  unsigned int i, c, r;
+
   double ** frequencies = new double*[image.Height()];
-  for (int i = 0; i < image.Height(); i++)
+  for (i = 0; i < image.Height(); i++)
   {
       frequencies[i] = new double[image.Width()];
   }
@@ -38,9 +40,9 @@ bool Filters::Menu_Filters_FourierTransform(Image& image)
   // find the min and max for normalization
   double fmin = log(frequencies[0][0]);
   double fmax = log(frequencies[0][0]);
-  for (int c = 0; c < image.Width(); c++)
+  for (c = 0; c < image.Width(); c++)
   {
-      for (int r = 0; r < image.Height(); r++)
+      for (r = 0; r < image.Height(); r++)
       {
         frequencies[c][r] = log(frequencies[c][r]);
         if(frequencies[c][r] < fmin)
@@ -52,9 +54,9 @@ bool Filters::Menu_Filters_FourierTransform(Image& image)
   double scalar = (fmax - fmin) / 256.0;
 
   // normalize and create a new frequency image
-  for (int c = 0; c < image.Width(); c++)
+  for (c = 0; c < image.Width(); c++)
   {
-      for (int r = 0; r < image.Height(); r++)
+      for (r = 0; r < image.Height(); r++)
       {
         image[c][r].SetIntensity((frequencies[c][r] - fmin) * scalar);
       }
