@@ -12,10 +12,10 @@
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool FourierTransform(Image& image, int ** frequencies)
+bool FourierTransform(Image& image, double ** frequencies)
 {
-    int ** real = new int[image.Height()][image.Width()];
-    int ** imag = new int[image.Height()][image.Width()];
+    double ** real = new int[image.Height()][image.Width()];
+    double ** imag = new int[image.Height()][image.Width()];
     double theta;
 
     for (int r = 0; r < image.Height(); r++)
@@ -33,7 +33,7 @@ bool FourierTransform(Image& image, int ** frequencies)
         }
     }
 
-    int ** i_frequencies = new int[image.Height()][image.Width()];
+    double ** i_frequencies = new int[image.Height()][image.Width()];
 
     for (int r = 0; r < image.Height(); r++)
     {
@@ -63,7 +63,7 @@ bool FourierTransform(Image& image, int ** frequencies)
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool InverseFourierTransform(Image& image, int ** frequencies)
+bool InverseFourierTransform(Image& image, double ** frequencies)
 {
 
 }

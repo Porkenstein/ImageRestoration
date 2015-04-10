@@ -10,6 +10,7 @@
 
 #pragma once
 #include <qtimagelib.h>
+#include "Toolbox.h"
 
 /***************************************************************************//**
  * Filters
