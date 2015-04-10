@@ -17,5 +17,5 @@
 
 using namespace std;
 
-bool FourierTransform(Image& image, double ** frequencies);
-bool InverseFourierTransform(Image& image, double ** frequencies);
+void FourierTransform(Image& image, double ** frequencies);
+void InverseFourierTransform(Image& image, double ** frequencies);

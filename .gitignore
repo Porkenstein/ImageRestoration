@@ -1,0 +1,5 @@
+*.o
+Makefile
+prog3
+moc_*
+
