@@ -8,10 +8,12 @@
  * Details - Contains various functions which can be used by the filter
  *           and NoiseSmoothing menus.
  ******************************************************************************/
-
-#pragma once
 #include <qtimagelib.h>
 #include <iostream>
+#include <cmath>
+#include <string>
+#include <qfiledialog.h>
+#include <stdlib.h>
 #define _USE_MATH_DEFINES
 #include <cmath>
 

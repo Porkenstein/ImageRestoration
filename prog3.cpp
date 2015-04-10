@@ -38,7 +38,6 @@ Details - The purpose of this assignment was to implement many of the image
  Issues and Bugs - No Bugs or Issues to speak of.
  *****************************************************************/
 
-#include <qtimagelib.h>
 #include "Filters.h"
 #include "NoiseSmoothing.h"
 

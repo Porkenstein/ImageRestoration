@@ -9,10 +9,6 @@
  ******************************************************************************/
 
 #include "Filters.h"
-#include <cmath>
-#include <string>
-#include <qfiledialog.h>
-#include <stdlib.h>
 
 /***************************************************************************//**
  * Menu_Filters_FourierTransform

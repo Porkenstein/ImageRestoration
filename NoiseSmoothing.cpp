@@ -29,7 +29,8 @@
  ******************************************************************************/
 bool NoiseSmoothing::Menu_NoiseAndSmoothing_Smooth(Image& image)
 {
-
+    //TODO
+    return false;
 }
 
 /***************************************************************************//**
@@ -47,5 +48,6 @@ bool NoiseSmoothing::Menu_NoiseAndSmoothing_Smooth(Image& image)
  ******************************************************************************/
 bool NoiseSmoothing::Menu_NoiseAndSmoothing_PeriodicNoise(Image& image)
 {
-
+    //TODO
+    return false;
 }
