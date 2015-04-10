@@ -61,8 +61,15 @@ bool Filters::Menu_Filters_FourierTransform(Image& image)
         image[c][r].SetIntensity((frequencies[c][r] - fmin) * scalar);
       }
   }
-
-  return false;
+  
+  // Free our array
+  for (i = 0; i < image.Height(); i++)
+  {
+    delete [] frequencies[i];
+  }
+  delete [] frequencies;
+  
+  return true;
 }
 
 /***************************************************************************//**
