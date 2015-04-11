@@ -22,3 +22,7 @@ using namespace std;
 
 void FourierTransform(Image& image, double ** frequencies);
 void InverseFourierTransform(Image& image, double ** frequencies);
+
+double** alloc2d(int width, int height);
+void dealloc2d(double** array, int rows);
+
