@@ -16,6 +16,7 @@
 #include <qfiledialog.h>
 #include <stdlib.h>
 #include <cmath>
+#include <sstream>
 
 using namespace std;
 

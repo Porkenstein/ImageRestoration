@@ -25,44 +25,7 @@
  ******************************************************************************/
 bool Filters::Menu_Filters_FourierTransform(Image& image)
 {
-  // allocate the frequency array
-  unsigned int i, c, r;
-
-  double ** frequencies = new double*[image.Height()];
-  for (i = 0; i < image.Height(); i++)
-  {
-      frequencies[i] = new double[image.Width()];
-  }
-
-  // transform to the frequency domain
-  FourierTransform(image, frequencies);
-
-  // find the min and max for normalization
-  double fmin = log(frequencies[0][0]);
-  double fmax = log(frequencies[0][0]);
-  for (c = 0; c < image.Width(); c++)
-  {
-      for (r = 0; r < image.Height(); r++)
-      {
-        frequencies[c][r] = log(frequencies[c][r]);
-        if(frequencies[c][r] < fmin)
-            fmin = frequencies[c][r];
-        if(frequencies[c][r] > fmax)
-            fmax = frequencies[c][r];
-      }
-  }
-  double scalar = (fmax - fmin) / 256.0;
-
-  // normalize and create a new frequency image
-  for (c = 0; c < image.Width(); c++)
-  {
-      for (r = 0; r < image.Height(); r++)
-      {
-        image[c][r].SetIntensity((frequencies[c][r] - fmin) * scalar);
-      }
-  }
-
-  return false;
+  dftMagnitude(image);
 }
 
 /***************************************************************************//**

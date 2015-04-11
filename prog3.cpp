@@ -40,6 +40,7 @@ Details - The purpose of this assignment was to implement many of the image
 
 #include "Filters.h"
 #include "NoiseSmoothing.h"
+#include "MouseDemo.h"
 
 /***************************************************************************//**
  * main
@@ -58,10 +59,12 @@ int main(int argc, char** argv)
 {
   Filters f;
   NoiseSmoothing ns;
+  MouseDemo md;
   ImageApp app(argc, argv);
 
   app.AddActions(&f);
   app.AddActions(&ns);
+  app.AddActions(&md);
   return app.Start();
 }
 
