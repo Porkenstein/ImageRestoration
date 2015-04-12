@@ -50,7 +50,13 @@ bool MouseDemo::Menu_ColorPicker( Image &image, QPoint pt )
 // (QMouseEvent is a Qt class)
 bool MouseDemo::Menu_Draw( ImageHnd &hnd, QMouseEvent event )
 {
-    if ( event.buttons() & Qt::LeftButton )
+    if ( event.type() == event.MouseButtonRelease )
+    {
+        Image &image = hnd.CopyImage();
+        image[event.pos().y()][event.pos().x()] = color;
+        return true;
+    }
+    if ( event.type() == event.MouseMove )
     {
         Image &image = hnd.CopyImage();
         image[event.pos().y()][event.pos().x()] = color;

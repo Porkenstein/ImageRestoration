@@ -11,6 +11,23 @@
 #include "Filters.h"
 
 /***************************************************************************//**
+ * Filters
+ * Author - Derek Stotz
+ *
+ * Constructs the Filters menu by defining the frequency arrays.
+ *
+ * Parameters -
+ *          freal - the real frequency values
+ *          fimag - the imaginary frequency values
+ *
+ ******************************************************************************/
+Filters::Filters(float **freal, float **fimag)
+{
+    this->Freal = freal;
+    this->Fimag = fimag;
+}
+
+/***************************************************************************//**
  * Menu_Filters_FourierTransform
  * Author - Derek Stotz
  *
@@ -23,9 +40,55 @@
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_Filters_FourierTransform(Image& image)
+bool Filters::Menu_Transform_FourierTransform(Image& image)
 {
-  dftMagnitude(image);
+    // allocate memory for the frequency information and store the original RBG image
+    this->Freal = alloc2d_f(image.Height(), image.Width());
+    this->Fimag = alloc2d_f(image.Height(), image.Width());
+    this->Spatial = image;
+
+    for (int r = 0; r < image.Height(); r++ )
+    {
+        for (int c = 0; c < image.Width(); c++)
+        {
+            this->Freal[r][c] = image[r][c].Intensity();
+            this->Fimag[r][c] = 0;
+        }
+    }
+
+    fft2D(1, image.Height(), image.Width(), this->Freal, this->Fimag);
+
+  return dftMagnitude(image);
+}
+
+/***************************************************************************//**
+ * Menu_Filters_InverseFourierTransform
+ * Author - Derek Stotz
+ *
+ * Applies the changes to the frequency information and recreates the original image.
+ *
+ * Parameters -
+ *          image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
+{
+    fft2D(-1, image.Height(), image.Width(), this->Freal, this->Fimag);
+
+    for (int r = 0; r < image.Height(); r++ )
+    {
+        for (int c = 0; c < image.Width(); c++)
+        {
+            this->Spatial[r][c].SetIntensity(this->Freal[r][c]);
+        }
+    }
+    dealloc2d_f(this->Freal, image.Height());
+    dealloc2d_f(this->Fimag, image.Height());
+    image = this->Spatial;
+
+  return true;
 }
 
 /***************************************************************************//**
@@ -84,9 +147,8 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_Filters_BandRejectFilter(Image& image)
+bool Filters::Menu_Filters_BandRejectFilter(Image& image, QPoint pt)
 {
-  // TODO
-  return false;
+  return true;
 }
 

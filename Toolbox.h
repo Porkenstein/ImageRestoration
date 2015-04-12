@@ -24,5 +24,6 @@ void FourierTransform(Image& image, double ** frequencies);
 void InverseFourierTransform(Image& image, double ** frequencies);
 
 double** alloc2d(int width, int height);
+float** alloc2d_f(int width, int height);
 void dealloc2d(double** array, int rows);
-
+void dealloc2d_f(float** array, int rows);

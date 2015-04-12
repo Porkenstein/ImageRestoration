@@ -14,6 +14,23 @@
 #include "NoiseSmoothing.h"
 
 /***************************************************************************//**
+ * NoiseSmoothing
+ * Author - Derek Stotz
+ *
+ * Constructs the NoiseSmoothing menu by defining the frequency arrays.
+ *
+ * Parameters -
+ *          freal - the real frequency values
+ *          fimag - the imaginary frequency values
+ *
+ ******************************************************************************/
+NoiseSmoothing::NoiseSmoothing(float **freal, float **fimag)
+{
+    this->Freal = freal;
+    this->Fimag = fimag;
+}
+
+/***************************************************************************//**
  * Menu_NoiseAndSmoothing_Smooth
  * Author - Dan Andrus
  *

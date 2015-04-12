@@ -81,7 +81,7 @@ void InverseFourierTransform(Image& image, double ** frequencies)
     // Temp variables
     unsigned int i, r, c;
     
-    // Allocate 2D arrays
+    // Allocate 2D arraysdouble
     double ** real = alloc2d(image.Height(), image.Width());
     double ** imag = alloc2d(image.Height(), image.Width());
     double ** i_frequencies = alloc2d(image.Height(), image.Width());
@@ -171,3 +171,46 @@ void dealloc2d(double** array, int rows)
   delete [] array;
 }
 
+
+/***************************************************************************//**
+ * alloc2d_f
+ * Author - Dan Andrus
+ *
+ * Dynamically allocates a 2-dimensional array of floats. Resulting array is
+ * row-major.
+ *
+ * Parameters -
+ *          rows - the number of rows in the array
+ *          columns - the number of columns per row
+ *
+ * Returns
+ *          The pointer into the array
+ ******************************************************************************/
+float** alloc2d_f(int rows, int columns)
+{
+  float** array = new float*[rows];
+  for (int i = 0; i < rows; i++)
+  {
+    array[i] = new float[columns];
+  }
+  return array;
+}
+
+/***************************************************************************//**
+ * dealloc2d_f
+ * Author - Dan Andrus
+ *
+ * Dynamically deallocates a 2-dimensional array of floats.
+ *
+ * Parameters -
+ *          array - The pointer to the array to deallocate
+ *          rows - the number of rows in the array
+ ******************************************************************************/
+void dealloc2d_f(float** array, int rows)
+{
+  for (int i = 0; i < rows; i++)
+  {
+    delete [] array[i];
+  }
+  delete [] array;
+}
