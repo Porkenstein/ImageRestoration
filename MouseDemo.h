@@ -22,7 +22,14 @@ class MouseDemo : public QObject
 
     bool Menu_ColorPicker( Image &image, QPoint pt );
     bool Menu_Draw( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_Circle( ImageHnd &hnd, QMouseEvent event );
 
   private:
     Pixel color;
+    int x;
+    int y;
+    
+    int buttons;
+    Image original;
+    
 };

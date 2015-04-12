@@ -28,5 +28,7 @@ class NoiseSmoothing : public QObject
   public slots:
     bool Menu_NoiseAndSmoothing_Smooth(Image& image);
     bool Menu_NoiseAndSmoothing_PeriodicNoise(Image& image);
+    
+  
 };
 
