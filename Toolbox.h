@@ -23,7 +23,7 @@ using namespace std;
 void FourierTransform(Image& image, double ** frequencies);
 void InverseFourierTransform(Image& image, double ** frequencies);
 
-void drawCircle(Image& image, int x, int y, int radius, int thickness);
+void drawCircle(Image& image, int x, int y, int radius, double thickness);
 
 double** alloc2d(int width, int height);
 float** alloc2d_f(int width, int height);
