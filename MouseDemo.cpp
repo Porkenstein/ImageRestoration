@@ -59,8 +59,88 @@ bool MouseDemo::Menu_Draw( ImageHnd &hnd, QMouseEvent event )
     if ( event.type() == event.MouseMove )
     {
         Image &image = hnd.CopyImage();
-        image[event.pos().y()][event.pos().x()] = color;
+        
+        if (x == -1 || y == -1)
+        {
+          x = event.pos().x();
+          y = event.pos().y();
+          image[x][y] = color;
+        }
+        else
+        {
+          do
+          {
+            if (abs(x - event.pos().x()) < abs(y - event.pos().y()))
+            {
+              if (event.pos().y() < y)
+                y--;
+              else
+                y++;
+            }
+            else
+            {
+              if (event.pos().x() < x)
+                x--;
+              else
+                x++;
+            }
+            image[y][x] = color;
+          }
+          while (x != event.pos().x() || y != event.pos().y());
+        }
+        
         return true;
     }
     return false;
 }
+
+bool MouseDemo::Menu_Circle( ImageHnd &hnd, QMouseEvent event )
+{
+  // Initial press
+  if (event.button() == Qt::LeftButton
+      && event.buttons() & Qt::LeftButton
+      && !(buttons & Qt::LeftButton))
+  {
+    x = event.pos().x();
+    y = event.pos().y();
+    
+    // Store original image
+    original = hnd.CopyImage();
+  }
+  
+  // Release
+  if (event.button() == Qt::LeftButton
+      && !(event.buttons() & Qt::LeftButton)
+      && buttons & Qt::LeftButton)
+  {
+    // Draw circle on original image
+    Image copy = original;
+    
+    double radius = sqrt(pow(x - event.pos().x(), 2) + pow(y - event.pos().y(), 2));
+    drawCircle(copy, x, y, radius, 1.0);
+    
+    hnd.CopyImage() = copy;
+    buttons = event.buttons();
+    return true;
+  }
+
+  // Check for left mouse drag
+  if (event.button() == Qt::NoButton && event.buttons() & Qt::LeftButton)
+  {
+    // Draw circle on original image
+    Image copy = original;
+    
+    double radius = sqrt(pow(x - event.pos().x(), 2) + pow(y - event.pos().y(), 2));
+    drawCircle(copy, x, y, radius, 1.0);
+    
+    hnd.CopyImage() = copy;
+    buttons = event.buttons();
+    return true;
+  }
+  
+  buttons = event.buttons();
+  
+  return false;
+}
+
+

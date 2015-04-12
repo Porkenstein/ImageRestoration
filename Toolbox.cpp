@@ -128,6 +128,41 @@ void InverseFourierTransform(Image& image, double ** frequencies)
     dealloc2d(i_frequencies, image.Height());
 }
 
+void drawCircle(Image& image, int x, int y, int radius, double thickness)
+{
+  int i, j;
+  int olimit, ilimit;   // outer limit vs inner limit
+  
+  olimit = radius + thickness + 1;
+  ilimit = sqrt(pow(radius,2) / 2) - thickness - 1;
+  
+  for (i = (y - olimit); i <= (y + olimit); i++)
+  {
+    // Double-check y boundaries
+    if (i < 0 || i >= (int) image.Height()) continue;
+    
+    for (j = (x - olimit); j <= (x + olimit); j++)
+    {
+      // Double check x boundaries
+      if (j < 0 || j >= (int) image.Width()) continue;
+      
+      // Don't waste time in interior
+      if (i >= y - ilimit && i <= y + ilimit && j >= x - ilimit && j <= x + ilimit)
+      {
+        j = x + ilimit;
+        continue;
+      }
+      
+      if (abs(sqrt(pow(i - y, 2) + pow(j - x, 2)) - radius) <= (thickness / 2.0))
+      {
+        image[i][j].SetRGB(255-image[i][j].Red(),
+                          255-image[i][j].Green(),
+                          255-image[i][j].Blue());
+      }
+    }
+  }
+}
+
 /***************************************************************************//**
  * alloc2d
  * Author - Dan Andrus
