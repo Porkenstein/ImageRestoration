@@ -8,6 +8,7 @@
  * Details - Contains various functions which can be used by the filter
  *           and NoiseSmoothing menus.
  ******************************************************************************/
+#pragma once
 #define _USE_MATH_DEFINES
 #include <qtimagelib.h>
 #include <iostream>
@@ -19,6 +20,14 @@
 #include <sstream>
 
 using namespace std;
+
+extern float ** Image_Freal;
+extern float ** Image_Fimag;
+extern Image Image_Spatial;
+extern int Mouse_X;
+extern int Mouse_Y;
+extern int Mouse_Buttons;
+extern Image Image_Original;
 
 void FourierTransform(Image& image, double ** frequencies);
 void InverseFourierTransform(Image& image, double ** frequencies);

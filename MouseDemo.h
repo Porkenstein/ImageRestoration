@@ -10,6 +10,7 @@ Written Jan 14, 2013 for SDSM&T CSC464/564 DIP course.
 Modifications:
 */
 
+#pragma once
 #include "Toolbox.h"
 
 class MouseDemo : public QObject
@@ -20,16 +21,7 @@ class MouseDemo : public QObject
     bool Menu_Palette_Negate( Image & );
     bool Menu_Palette_Grayscale( Image & );
 
-    bool Menu_ColorPicker( Image &image, QPoint pt );
     bool Menu_Draw( ImageHnd &hnd, QMouseEvent event );
     bool Menu_Circle( ImageHnd &hnd, QMouseEvent event );
 
-  private:
-    Pixel color;
-    int x;
-    int y;
-    
-    int buttons;
-    Image original;
-    
 };

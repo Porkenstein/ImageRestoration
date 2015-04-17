@@ -10,22 +10,13 @@
 
 #include "Filters.h"
 
-/***************************************************************************//**
- * Filters
- * Author - Derek Stotz
- *
- * Constructs the Filters menu by defining the frequency arrays.
- *
- * Parameters -
- *          freal - the real frequency values
- *          fimag - the imaginary frequency values
- *
- ******************************************************************************/
-Filters::Filters(float **freal, float **fimag)
-{
-    this->Freal = freal;
-    this->Fimag = fimag;
-}
+extern float ** Image_Freal;
+extern float ** Image_Fimag;
+extern Image Image_Spatial;
+extern int Mouse_X;
+extern int Mouse_Y;
+extern int Mouse_Buttons;
+extern Image Image_Original;
 
 /***************************************************************************//**
  * Menu_Filters_FourierTransform
@@ -43,20 +34,20 @@ Filters::Filters(float **freal, float **fimag)
 bool Filters::Menu_Transform_FourierTransform(Image& image)
 {
     // allocate memory for the frequency information and store the original RBG image
-    this->Freal = alloc2d_f(image.Height(), image.Width());
-    this->Fimag = alloc2d_f(image.Height(), image.Width());
-    this->Spatial = image;
+    Image_Freal = alloc2d_f(image.Height(), image.Width());
+    Image_Fimag = alloc2d_f(image.Height(), image.Width());
+    Image_Spatial = image;
 
     for (int r = 0; r < image.Height(); r++ )
     {
         for (int c = 0; c < image.Width(); c++)
         {
-            this->Freal[r][c] = image[r][c].Intensity();
-            this->Fimag[r][c] = 0;
+            Image_Freal[r][c] = image[r][c].Intensity();
+            Image_Fimag[r][c] = 0;
         }
     }
 
-    fft2D(1, image.Height(), image.Width(), this->Freal, this->Fimag);
+    fft2D(1, image.Height(), image.Width(), Image_Freal, Image_Fimag);
 
   return dftMagnitude(image);
 }
@@ -75,18 +66,18 @@ bool Filters::Menu_Transform_FourierTransform(Image& image)
  ******************************************************************************/
 bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
 {
-    fft2D(-1, image.Height(), image.Width(), this->Freal, this->Fimag);
+    fft2D(-1, image.Height(), image.Width(), Image_Freal, Image_Fimag);
 
     for (int r = 0; r < image.Height(); r++ )
     {
         for (int c = 0; c < image.Width(); c++)
         {
-            this->Spatial[r][c].SetIntensity(this->Freal[r][c]);
+            Image_Spatial[r][c].SetIntensity(Image_Freal[r][c]);
         }
     }
-    dealloc2d_f(this->Freal, image.Height());
-    dealloc2d_f(this->Fimag, image.Height());
-    image = this->Spatial;
+    dealloc2d_f(Image_Freal, image.Height());
+    dealloc2d_f(Image_Fimag, image.Height());
+    image = Image_Spatial;
 
   return true;
 }

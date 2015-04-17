@@ -24,17 +24,9 @@
 class NoiseSmoothing : public QObject
 {
   Q_OBJECT;
-  
-  public:
-    NoiseSmoothing(float ** freal, float ** fimag);
 
   public slots:
     bool Menu_NoiseAndSmoothing_Smooth(Image& image);
     bool Menu_NoiseAndSmoothing_PeriodicNoise(Image& image);
-
-  private:
-    float ** Freal;
-    float ** Fimag;
-    Image Spatial;
 };
 

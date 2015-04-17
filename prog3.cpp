@@ -57,11 +57,8 @@ Details - The purpose of this assignment was to implement many of the image
  ******************************************************************************/
 int main(int argc, char** argv)
 {
-  float ** fimag;
-  float ** freal;
-
-  Filters f(freal, fimag);
-  NoiseSmoothing ns(freal, fimag);
+  Filters f;
+  NoiseSmoothing ns;
   MouseDemo md;
   ImageApp app(argc, argv);
 
