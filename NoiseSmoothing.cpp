@@ -21,6 +21,12 @@ extern int Mouse_Y;
 extern int Mouse_Buttons;
 extern Image Image_Original;
 
+NoiseSmoothing::NoiseSmoothing() : mouse_buttons(0), origin_x(0), origin_y(0),
+  image_is_cached(false)
+{
+  // Empty default public constructor
+}
+
 /***************************************************************************//**
  * Menu_NoiseAndSmoothing_Smooth
  * Author - Dan Andrus
@@ -37,8 +43,9 @@ extern Image Image_Original;
  ******************************************************************************/
 bool NoiseSmoothing::Menu_NoiseAndSmoothing_Smooth(Image& image)
 {
-    //TODO
-    return false;
+  //TODO
+  image.Height();
+  return false;
 }
 
 /***************************************************************************//**
@@ -56,6 +63,8 @@ bool NoiseSmoothing::Menu_NoiseAndSmoothing_Smooth(Image& image)
  ******************************************************************************/
 bool NoiseSmoothing::Menu_NoiseAndSmoothing_PeriodicNoise(Image& image)
 {
-    //TODO
-    return false;
+  //TODO
+  image.Height();
+  return false;
 }
+

@@ -38,9 +38,9 @@ bool Filters::Menu_Transform_FourierTransform(Image& image)
     Image_Fimag = alloc2d_f(image.Width(), image.Height());
     Image_Spatial = image;
 
-    for (int r = 0; r < image.Height(); r++ )
+    for (unsigned int r = 0; r < image.Height(); r++ )
     {
-        for (int c = 0; c < image.Width(); c++)
+        for (unsigned int c = 0; c < image.Width(); c++)
         {
             Image_Freal[r][c] = image[r][c].Intensity();
             Image_Fimag[r][c] = 0;
@@ -99,6 +99,7 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
 bool Filters::Menu_Filters_WienerFilter(Image& image)
 {
   // TODO
+  image.Height();
   return false;
 }
 
@@ -119,6 +120,7 @@ bool Filters::Menu_Filters_WienerFilter(Image& image)
 bool Filters::Menu_Filters_InverseFilter(Image& image)
 {
   // TODO
+  image.Height();
   return false;
 }
 
@@ -140,6 +142,9 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
  ******************************************************************************/
 bool Filters::Menu_Filters_BandRejectFilter(Image& image, QPoint pt)
 {
+  // TODO
+  image.Height();
+  pt.x();
   return true;
 }
 
