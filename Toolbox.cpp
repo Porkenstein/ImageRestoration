@@ -196,26 +196,6 @@ double** alloc2d(int rows, int columns)
 }
 
 /***************************************************************************//**
- * dealloc2d
- * Author - Dan Andrus
- *
- * Dynamically deallocates a 2-dimensional array of doubles.
- *
- * Parameters -
- *          array - The pointer to the array to deallocate
- *          rows - the number of rows in the array
- ******************************************************************************/
-void dealloc2d(double** array, int rows)
-{
-  for (int i = 0; i < rows; i++)
-  {
-    delete [] array[i];
-  }
-  delete [] array;
-}
-
-
-/***************************************************************************//**
  * alloc2d_f
  * Author - Dan Andrus
  *
@@ -240,6 +220,25 @@ float** alloc2d_f(int rows, int columns)
 }
 
 /***************************************************************************//**
+ * dealloc2d
+ * Author - Dan Andrus
+ *
+ * Dynamically deallocates a 2-dimensional array of doubles.
+ *
+ * Parameters -
+ *          array - The pointer to the array to deallocate
+ *          rows - the number of rows in the array
+ ******************************************************************************/
+void dealloc2d(double** array, int rows)
+{
+  for (int i = 0; i < rows; i++)
+  {
+    delete [] array[i];
+  }
+  delete [] array;
+}
+
+/***************************************************************************//**
  * dealloc2d_f
  * Author - Dan Andrus
  *
@@ -257,3 +256,4 @@ void dealloc2d_f(float** array, int rows)
   }
   delete [] array;
 }
+

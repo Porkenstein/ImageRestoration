@@ -34,8 +34,8 @@ extern Image Image_Original;
 bool Filters::Menu_Transform_FourierTransform(Image& image)
 {
     // allocate memory for the frequency information and store the original RBG image
-    Image_Freal = alloc2d_f(image.Height(), image.Width());
-    Image_Fimag = alloc2d_f(image.Height(), image.Width());
+    Image_Freal = alloc2d_f(image.Width(), image.Height());
+    Image_Fimag = alloc2d_f(image.Width(), image.Height());
     Image_Spatial = image;
 
     for (int r = 0; r < image.Height(); r++ )
@@ -68,9 +68,9 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
 {
     fft2D(-1, image.Height(), image.Width(), Image_Freal, Image_Fimag);
 
-    for (int r = 0; r < image.Height(); r++ )
+    for (unsigned int r = 0; r < image.Height(); r++ )
     {
-        for (int c = 0; c < image.Width(); c++)
+        for (unsigned int c = 0; c < image.Width(); c++)
         {
             Image_Spatial[r][c].SetIntensity(Image_Freal[r][c]);
         }
