@@ -49,33 +49,33 @@ bool MouseDemo::Menu_Draw( ImageHnd &hnd, QMouseEvent event )
     {
         Image &image = hnd.CopyImage();
         
-        if (Mouse_X == -1 || Mouse_Y == -1)
+        if (T_Mouse_X == -1 || T_Mouse_Y == -1)
         {
-          Mouse_X = event.pos().x();
-          Mouse_Y = event.pos().y();
-          image[Mouse_X][Mouse_Y] = 255;
+          T_Mouse_X = event.pos().x();
+          T_Mouse_Y = event.pos().y();
+          image[T_Mouse_X][T_Mouse_Y] = 255;
         }
         else
         {
           do
           {
-            if (abs(Mouse_Y - event.pos().x()) < abs(Mouse_Y - event.pos().y()))
+            if (abs(T_Mouse_Y - event.pos().x()) < abs(T_Mouse_Y - event.pos().y()))
             {
-              if (event.pos().y() < Mouse_Y)
-                Mouse_Y--;
+              if (event.pos().y() < T_Mouse_Y)
+                T_Mouse_Y--;
               else
-                Mouse_Y++;
+                T_Mouse_Y++;
             }
             else
             {
-              if (event.pos().x() < Mouse_X)
-                Mouse_X--;
+              if (event.pos().x() < T_Mouse_X)
+                T_Mouse_X--;
               else
-                Mouse_X++;
+                T_Mouse_X++;
             }
-            image[Mouse_Y][Mouse_X] = 255;
+            image[T_Mouse_Y][T_Mouse_X] = 255;
           }
-          while (Mouse_X != event.pos().x() || Mouse_Y != event.pos().y());
+          while (T_Mouse_X != event.pos().x() || T_Mouse_Y != event.pos().y());
         }
         
         return true;
@@ -88,28 +88,28 @@ bool MouseDemo::Menu_Circle( ImageHnd &hnd, QMouseEvent event )
   // Initial press
   if (event.button() == Qt::LeftButton
       && event.buttons() & Qt::LeftButton
-      && !(Mouse_Buttons & Qt::LeftButton))
+      && !(T_Mouse_Buttons & Qt::LeftButton))
   {
-    Mouse_X = event.pos().x();
-    Mouse_Y = event.pos().y();
+    T_Mouse_X = event.pos().x();
+    T_Mouse_Y = event.pos().y();
     
     // Store original image
-    Image_Original = hnd.CopyImage();
+    T_Image_Original = hnd.CopyImage();
   }
   
   // Release
   if (event.button() == Qt::LeftButton
       && !(event.buttons() & Qt::LeftButton)
-      && Mouse_Buttons & Qt::LeftButton)
+      && T_Mouse_Buttons & Qt::LeftButton)
   {
     // Draw circle on original image
-    Image copy = Image_Original;
+    Image copy = T_Image_Original;
     
-    double radius = sqrt(pow(Mouse_X - event.pos().x(), 2) + pow(Mouse_Y - event.pos().y(), 2));
-    drawCircle(copy, Mouse_X, Mouse_Y, radius, 1.0);
+    double radius = sqrt(pow(T_Mouse_X - event.pos().x(), 2) + pow(T_Mouse_Y - event.pos().y(), 2));
+    drawCircle(copy, T_Mouse_X, T_Mouse_Y, radius, 1.0);
     
     hnd.CopyImage() = copy;
-    Mouse_Buttons = event.buttons();
+    T_Mouse_Buttons = event.buttons();
     return true;
   }
 
@@ -117,17 +117,17 @@ bool MouseDemo::Menu_Circle( ImageHnd &hnd, QMouseEvent event )
   if (event.button() == Qt::NoButton && event.buttons() & Qt::LeftButton)
   {
     // Draw circle on original image
-    Image copy = Image_Original;
+    Image copy = T_Image_Original;
     
-    double radius = sqrt(pow(Mouse_X - event.pos().x(), 2) + pow(Mouse_Y - event.pos().y(), 2));
-    drawCircle(copy, Mouse_X, Mouse_Y, radius, 1.0);
+    double radius = sqrt(pow(T_Mouse_X - event.pos().x(), 2) + pow(T_Mouse_Y - event.pos().y(), 2));
+    drawCircle(copy, T_Mouse_X, T_Mouse_Y, radius, 1.0);
     
     hnd.CopyImage() = copy;
-    Mouse_Buttons = event.buttons();
+    T_Mouse_Buttons = event.buttons();
     return true;
   }
   
-  Mouse_Buttons = event.buttons();
+  T_Mouse_Buttons = event.buttons();
   
   return false;
 }

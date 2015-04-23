@@ -26,20 +26,20 @@
 bool Filters::Menu_Transform_FourierTransform(Image& image)
 {
     // allocate memory for the frequency information and store the original RBG image
-    Image_Freal = alloc2d_f(image.Width(), image.Height());
-    Image_Fimag = alloc2d_f(image.Width(), image.Height());
-    Image_Spatial = image;
+    T_Image_Freal = alloc2d_f(image.Width(), image.Height());
+    T_Image_Fimag = alloc2d_f(image.Width(), image.Height());
+    T_Image_Spatial = image;
 
     for (unsigned int r = 0; r < image.Height(); r++ )
     {
         for (unsigned int c = 0; c < image.Width(); c++)
         {
-            Image_Freal[r][c] = image[r][c].Intensity();
-            Image_Fimag[r][c] = 0;
+            T_Image_Freal[r][c] = image[r][c].Intensity();
+            T_Image_Fimag[r][c] = 0;
         }
     }
 
-    fft2D(1, image.Height(), image.Width(), Image_Freal, Image_Fimag);
+    fft2D(1, image.Height(), image.Width(), T_Image_Freal, T_Image_Fimag);
 
   return dftMagnitude(image);
 }
@@ -58,18 +58,18 @@ bool Filters::Menu_Transform_FourierTransform(Image& image)
  ******************************************************************************/
 bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
 {
-    fft2D(-1, image.Height(), image.Width(), Image_Freal, Image_Fimag);
+    fft2D(-1, image.Height(), image.Width(), T_Image_Freal, T_Image_Fimag);
 
     for (unsigned int r = 0; r < image.Height(); r++ )
     {
         for (unsigned int c = 0; c < image.Width(); c++)
         {
-            Image_Spatial[r][c].SetIntensity(Image_Freal[r][c]);
+            T_Image_Spatial[r][c].SetIntensity(T_Image_Freal[r][c]);
         }
     }
-    dealloc2d_f(Image_Freal, image.Height());
-    dealloc2d_f(Image_Fimag, image.Height());
-    image = Image_Spatial;
+    dealloc2d_f(T_Image_Freal, image.Height());
+    dealloc2d_f(T_Image_Fimag, image.Height());
+    image = T_Image_Spatial;
 
   return true;
 }
