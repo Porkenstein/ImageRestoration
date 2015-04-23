@@ -29,9 +29,6 @@ extern int Mouse_Y;
 extern int Mouse_Buttons;
 extern Image Image_Original;
 
-void FourierTransform(Image& image, double ** frequencies);
-void InverseFourierTransform(Image& image, double ** frequencies);
-
 void drawCircle(Image& image, int x, int y, int radius, double thickness);
 
 double** alloc2d(int width, int height);
