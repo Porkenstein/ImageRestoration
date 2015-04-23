@@ -25,3 +25,4 @@ class MouseDemo : public QObject
     bool Menu_Circle( ImageHnd &hnd, QMouseEvent event );
 
 };
+

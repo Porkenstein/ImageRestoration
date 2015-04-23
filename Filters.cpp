@@ -10,14 +10,6 @@
 
 #include "Filters.h"
 
-extern float ** Image_Freal;
-extern float ** Image_Fimag;
-extern Image Image_Spatial;
-extern int Mouse_X;
-extern int Mouse_Y;
-extern int Mouse_Buttons;
-extern Image Image_Original;
-
 /***************************************************************************//**
  * Menu_Filters_FourierTransform
  * Author - Derek Stotz

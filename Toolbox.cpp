@@ -1,12 +1,12 @@
 #include "Toolbox.h"
 
-extern float ** Image_Freal;
-extern float ** Image_Fimag;
-extern Image Image_Spatial;
-extern int Mouse_X;
-extern int Mouse_Y;
-extern int Mouse_Buttons;
-extern Image Image_Original;
+float ** Image_Freal;
+float ** Image_Fimag;
+Image Image_Spatial;
+int Mouse_X;
+int Mouse_Y;
+int Mouse_Buttons;
+Image Image_Original;
 
 /***************************************************************************//**
  * drawCircle

@@ -13,14 +13,6 @@
 
 #include "NoiseSmoothing.h"
 
-extern float ** Image_Freal;
-extern float ** Image_Fimag;
-extern Image Image_Spatial;
-extern int Mouse_X;
-extern int Mouse_Y;
-extern int Mouse_Buttons;
-extern Image Image_Original;
-
 NoiseSmoothing::NoiseSmoothing() : mouse_buttons(0), origin_x(0), origin_y(0),
   image_is_cached(false)
 {

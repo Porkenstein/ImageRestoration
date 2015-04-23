@@ -12,14 +12,6 @@ Modifications:
 
 #include "MouseDemo.h"
 
- float ** Image_Freal;
- float ** Image_Fimag;
- Image Image_Spatial;
- int Mouse_X;
- int Mouse_Y;
- int Mouse_Buttons;
- Image Image_Original;
-
 // ------------------------------- menu bar additions ------------------------------------
 
 // the following methods add actions to the menu bar
