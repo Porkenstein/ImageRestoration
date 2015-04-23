@@ -25,11 +25,19 @@
  ******************************************************************************/
 bool Filters::Menu_Transform_FourierTransform(Image& image)
 {
-    // allocate memory for the frequency information and store the original RBG image
+    // Make sure we don't already have an image's frequency info stored
+    if (T_Frequency_Set)
+    {
+        // TODO Display images
+        return false;
+    }
+
+    // Allocate arrays for frequency information and store original image
     T_Image_Freal = alloc2d_f(image.Width(), image.Height());
     T_Image_Fimag = alloc2d_f(image.Width(), image.Height());
     T_Image_Spatial = image;
 
+    // Fill dynamically allocated arrays
     for (unsigned int r = 0; r < image.Height(); r++ )
     {
         for (unsigned int c = 0; c < image.Width(); c++)
@@ -39,9 +47,19 @@ bool Filters::Menu_Transform_FourierTransform(Image& image)
         }
     }
 
+    // Run fast Fourier transform
     fft2D(1, image.Height(), image.Width(), T_Image_Freal, T_Image_Fimag);
 
-  return dftMagnitude(image);
+    // Attempt to display frequency info
+    if (dftMagnitude(image))
+    {
+        T_Frequency_Set = true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /***************************************************************************//**
@@ -58,8 +76,10 @@ bool Filters::Menu_Transform_FourierTransform(Image& image)
  ******************************************************************************/
 bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
 {
+    // Run inverse fourier transform on frequency data
     fft2D(-1, image.Height(), image.Width(), T_Image_Freal, T_Image_Fimag);
 
+    // Apply new intensity data to original image
     for (unsigned int r = 0; r < image.Height(); r++ )
     {
         for (unsigned int c = 0; c < image.Width(); c++)
@@ -67,11 +87,16 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
             T_Image_Spatial[r][c].SetIntensity(T_Image_Freal[r][c]);
         }
     }
+    
+    // Deallocate arrays
     dealloc2d_f(T_Image_Freal, image.Height());
     dealloc2d_f(T_Image_Fimag, image.Height());
+    
+    // Display modified orignal image
     image = T_Image_Spatial;
+    T_Frequency_Set = false;
 
-  return true;
+    return true;
 }
 
 /***************************************************************************//**
