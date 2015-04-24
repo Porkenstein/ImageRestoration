@@ -76,6 +76,11 @@ bool Filters::Menu_Transform_FourierTransform(Image& image)
  ******************************************************************************/
 bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
 {
+    if (!T_Frequency_Set)
+    {
+        return false;
+    }
+    
     // Run inverse fourier transform on frequency data
     fft2D(-1, image.Height(), image.Width(), T_Image_Freal, T_Image_Fimag);
 
