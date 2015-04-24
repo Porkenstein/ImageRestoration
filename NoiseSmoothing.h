@@ -24,21 +24,9 @@
 class NoiseSmoothing : public QObject
 {
   Q_OBJECT;
-  
-  public:
-    NoiseSmoothing();
 
   public slots:
-    bool Menu_NoiseAndSmoothing_Smooth(Image& image);
-    bool Menu_NoiseAndSmoothing_PeriodicNoise(Image& image);
-    
-  private:
-    int mouse_buttons;
-    int origin_x;
-    int origin_y;
-    bool image_is_cached;
-    float** frequency_real;
-    float** frequency_imag;
-    Image cached_image;
+    bool Menu_NoiseAndSmoothing_Smooth( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_NoiseAndSmoothing_PeriodicNoise( ImageHnd &hnd, QMouseEvent event );
 };
 
