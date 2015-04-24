@@ -27,7 +27,7 @@
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool NoiseSmoothing::Menu_NoiseAndSmoothing_Smooth( ImageHnd &hnd, QMouseEvent event )
+bool NoiseSmoothing::Menu_NoiseAndSmoothing_IdealLPF( ImageHnd &hnd, QMouseEvent event )
 {
     int origin_x;
     int origin_y;
