@@ -106,9 +106,115 @@ bool NoiseSmoothing::Menu_NoiseAndSmoothing_IdealLPF( ImageHnd &hnd, QMouseEvent
                 {
                     copy[y][x].SetIntensity(0);
                     
-                    T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] = 0;
-                    T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] = 0;
+                    T_Image_Freal
+                        [(y + origin_y) % copy.Height()]
+                        [(x + origin_x) % copy.Width()] = 0;
+                    T_Image_Fimag
+                        [(y + origin_y) % copy.Height()]
+                        [(x + origin_x) % copy.Width()] = 0;
                 }
+            }
+        }
+        
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+    
+    T_Mouse_Buttons = event.buttons();
+    
+    return false;
+}
+
+
+
+bool NoiseSmoothing::Menu_NoiseAndSmoothing_GaussianLPF( ImageHnd &hnd, QMouseEvent event )
+{
+    int origin_x;
+    int origin_y;
+    
+    // Only work with Fourier transformed images
+    if (!T_Frequency_Set)
+    {
+      return false;
+    }
+    
+    // Initial press
+    if (event.button() == Qt::LeftButton
+        && event.buttons() & Qt::LeftButton
+        && !(T_Mouse_Buttons & Qt::LeftButton))
+    {
+        // Store original image
+        T_Image_Original = hnd.CopyImage();
+    }
+
+    // Left click drag OR initial press
+    if ((event.button() == Qt::NoButton && event.buttons() & Qt::LeftButton)
+        || (event.button() == Qt::LeftButton
+            && event.buttons() & Qt::LeftButton
+            && !(T_Mouse_Buttons & Qt::LeftButton)))
+    {
+        // Draw circle on stored original image
+        Image copy = T_Image_Original;
+        
+        origin_x = copy.Width() / 2;
+        origin_y = copy.Height() / 2;
+        
+        // Calculate distance from mouse to center of image
+        double radius = sqrt(
+            pow(abs(origin_y - event.pos().y()), 2.0) +
+            pow(abs(origin_x - event.pos().x()), 2.0)
+        );
+        
+        // Draw an inverted circle on the image
+        drawCircle(copy, origin_x, origin_y, radius, 1.0);
+        
+        // Apply changes to our main image
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+    
+    // Release
+    if (event.button() == Qt::LeftButton
+        && !(event.buttons() & Qt::LeftButton)
+        && T_Mouse_Buttons & Qt::LeftButton)
+    {
+        // Work with copy of original image
+        Image copy = T_Image_Original;
+        
+        origin_x = copy.Width() / 2;
+        origin_y = copy.Height() / 2;
+        
+        // Calculate distance from mouse to center of image
+        double r;
+        double radius = sqrt(
+            pow(abs(origin_y - event.pos().y()), 2.0) +
+            pow(abs(origin_x - event.pos().x()), 2.0)
+        );
+        double radius_div = pow(radius, 2.0) * 2.0;
+        float adjustment;
+        
+        // Zero out any pixel outside of radius
+        for (unsigned int y = 0; y < copy.Height(); y++)
+        {
+            for (unsigned int x = 0; x < copy.Width(); x++)
+            {
+                r = sqrt(
+                    pow(abs((double) origin_y - y), 2.0) +
+                    pow(abs((double) origin_x - x), 2.0)
+                );
+                
+                adjustment = exp(-pow(r, 2.0) / radius_div); 
+                
+                copy[y][x].SetIntensity(copy[y][x].Intensity() * adjustment);
+                
+                T_Image_Freal
+                    [(y + origin_y) % copy.Height()]
+                    [(x + origin_x) % copy.Width()] *= adjustment;
+                T_Image_Fimag
+                    [(y + origin_y) % copy.Height()]
+                    [(x + origin_x) % copy.Width()] *= adjustment;
             }
         }
         
