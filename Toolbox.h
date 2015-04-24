@@ -19,6 +19,9 @@
 #include <cmath>
 #include <sstream>
 
+#define MAX(x,y)  ((x)>(y)?(x):(y))
+#define MIN(x,y)  ((x)<(y)?(x):(y))
+
 using namespace std;
 
 extern float ** T_Image_Freal;
