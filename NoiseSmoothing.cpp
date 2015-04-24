@@ -255,7 +255,7 @@ bool NoiseSmoothing::Menu_NoiseAndSmoothing_GaussianLPF( ImageHnd &hnd, QMouseEv
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool NoiseSmoothing::Menu_NoiseAndSmoothing_PeriodicNoise( ImageHnd &hnd, QMouseEvent event )
+bool NoiseSmoothing::Menu_NoiseAndSmoothing_AddNoise( ImageHnd &hnd, QMouseEvent event )
 {
     static const int preview_radius = 5;
     int origin_x;

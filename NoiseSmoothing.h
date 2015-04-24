@@ -28,6 +28,6 @@ class NoiseSmoothing : public QObject
   public slots:
     bool Menu_NoiseAndSmoothing_IdealLPF( ImageHnd &hnd, QMouseEvent event );
     bool Menu_NoiseAndSmoothing_GaussianLPF( ImageHnd &hnd, QMouseEvent event );
-    bool Menu_NoiseAndSmoothing_PeriodicNoise( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_NoiseAndSmoothing_AddNoise( ImageHnd &hnd, QMouseEvent event );
 };
 
