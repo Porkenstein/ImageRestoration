@@ -18,11 +18,12 @@
  * Author - Dan Andrus
  *
  * Smooths an image by transforming it into the frequency domain and applying
- * a low-pass filter to the frequency information.  Asks the user for the
+ * an ideal low-pass filter to the frequency information.  Asks the user for the
  * frequency to filter at.
  *
  * Parameters - 
-            image - the image object to smooth.
+ *          hnd - The handle of thei mage object to smooth
+ *          event - The mouse event object
  *
  * Returns
  *          true if successful, false if not
@@ -126,8 +127,21 @@ bool NoiseSmoothing::Menu_NoiseAndSmoothing_IdealLPF( ImageHnd &hnd, QMouseEvent
     return false;
 }
 
-
-
+/***************************************************************************//**
+ * Menu_NoiseAndSmoothing_Smooth
+ * Author - Dan Andrus
+ *
+ * Smooths an image by transforming it into the frequency domain and applying
+ * a Gaussian low-pass filter to the frequency information.  Asks the user for
+ * the frequency to filter at.
+ *
+ * Parameters - 
+ *          hnd - The handle of thei mage object to smooth
+ *          event - The mouse event object
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
 bool NoiseSmoothing::Menu_NoiseAndSmoothing_GaussianLPF( ImageHnd &hnd, QMouseEvent event )
 {
     int origin_x;
