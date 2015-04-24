@@ -162,11 +162,92 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_Filters_BandRejectFilter(Image& image, QPoint pt)
+bool Filters::Menu_Filters_BandRejectFilter( ImageHnd &hnd, QMouseEvent event )
 {
-  // TODO
-  image.Height();
-  pt.x();
-  return true;
+    int origin_x;
+    int origin_y;
+
+    // Initial press
+    if (event.button() == Qt::LeftButton
+      && event.buttons() & Qt::LeftButton
+      && !(T_Mouse_Buttons & Qt::LeftButton))
+    {
+        T_Mouse_X = event.pos().x();
+        T_Mouse_Y = event.pos().y();
+
+        // Store original image
+        T_Image_Original = hnd.CopyImage();
+    }
+
+    // Drag (and initial press)
+    if ((event.button() == Qt::NoButton && event.buttons() & Qt::LeftButton)
+        || (event.button() == Qt::LeftButton
+            && event.buttons() & Qt::LeftButton
+            && !(T_Mouse_Buttons & Qt::LeftButton)))
+    {
+        // Draw circle on original image
+        Image copy = T_Image_Original;
+
+        double radius = sqrt(pow(T_Mouse_X - event.pos().x(), 2) + pow(T_Mouse_Y - event.pos().y(), 2));
+        drawCircle(copy, T_Mouse_X, T_Mouse_Y, radius, 1.0);
+
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+
+    // Release
+    if (event.button() == Qt::LeftButton
+      && !(event.buttons() & Qt::LeftButton)
+      && T_Mouse_Buttons & Qt::LeftButton)
+    {
+        // Draw circle on original image
+        Image copy = T_Image_Original;
+
+        origin_x = copy.Width() / 2;
+        origin_y = copy.Height() / 2;
+
+        double rad;
+        double radius = sqrt(
+            pow(T_Mouse_X - event.pos().x(), 2) +
+            pow(T_Mouse_Y - event.pos().y(), 2)
+        );
+        double radius_div = pow(radius, 2.0) * 2.0;
+        float adjustment;
+        
+        // Gaussian removal
+        for (unsigned int y = 0; y < copy.Height(); y++)
+        {
+            for (unsigned int x = 0; x < copy.Width(); x++)
+            {
+                rad = sqrt(
+                    pow(abs((double) (T_Mouse_X - (int) x)), 2.0) +
+                    pow(abs((double) (T_Mouse_Y - (int) y)), 2.0)
+                );
+                
+                // Calculate adjustment (inverse of Guassian LPF)
+                adjustment = exp(-pow(rad, 2.0) / radius_div);
+                adjustment = 1.0 - adjustment;
+                
+                // Apply adjustment multiplier to frequency data and image
+                copy[y][x].SetIntensity(copy[y][x].Intensity() * adjustment);
+                
+                T_Image_Freal
+                    [(y + origin_y) % copy.Height()]
+                    [(x + origin_x) % copy.Width()] *= adjustment;
+                T_Image_Fimag
+                    [(y + origin_y) % copy.Height()]
+                    [(x + origin_x) % copy.Width()] *= adjustment;
+            }
+        }
+
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+
+    T_Mouse_Buttons = event.buttons();
+
+    return false;
 }
 

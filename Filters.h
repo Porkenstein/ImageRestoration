@@ -31,7 +31,7 @@ class Filters : public QObject
     bool Menu_Transform_InverseFourierTransform(Image& image);
     bool Menu_Filters_WienerFilter(Image& image);
     bool Menu_Filters_InverseFilter(Image& image);
-    bool Menu_Filters_BandRejectFilter(Image& image, QPoint pt);
+    bool Menu_Filters_BandRejectFilter( ImageHnd &hnd, QMouseEvent event );
 
 };
 
