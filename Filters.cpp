@@ -9,6 +9,9 @@
  ******************************************************************************/
 
 #include "Filters.h"
+#include <iostream>
+#include <QMessageBox>
+using namespace std;
 
 /***************************************************************************//**
  * Menu_Filters_FourierTransform
@@ -147,23 +150,215 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
 }
 
 /***************************************************************************//**
- * Menu_Filters_BandRejectFilter
- * Author - Derek Stotz
+ * Menu_Filters_BandReject
+ * Author - Daniel Andrus
  *
- * Applies a band-reject filter on an image. Prompts the user to enter a lower
- * bound between 0 and 1 and an upper bound between 0 and 1. The image will then
- * be run through the Fourier transform and a band reject filter will be applied
- * to it so that all data between the lower and upper bound is erased. The image
- * is then run through the inverse Fourier transform.
+ * Allows the user to interactivally apply a band-reject filter on the frequency
+ * data of an image. After using the mouse to specify a band range, the user
+ * asks whether to use a Gaussian function or an ideal band-pass filter. Then
+ * applies either an ideal band-pass filter or a Gaussian band-pass filter based
+ * on the user's choise.
  *
- * Parameters -
- *          image - the image object to manipulate.
+ * Parameters
+ *          hnd - Handle for the image object to manipulate
+ *          event - The mouse event object containing event data
  *
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_Filters_BandRejectFilter( ImageHnd &hnd, QMouseEvent event )
+bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
 {
+    // Static variables for keeping track of radii across runs
+    // Prevents us from using global variables
+    static double lower_bound;
+    static double upper_bound;
+    static double middl_bound;
+
+    int origin_x;
+    int origin_y;
+    
+    double radius;
+    double radius_div;
+    float adjustment;
+    
+    unsigned int x;
+    unsigned int y;
+    bool ideal;
+    
+    
+    // Only work with Fourier transformed images
+    if (!T_Frequency_Set)
+    {
+      return false;
+    }
+    
+    // Initial press
+    if (event.button() == Qt::LeftButton
+        && event.buttons() & Qt::LeftButton
+        && !(T_Mouse_Buttons & Qt::LeftButton))
+    {
+        // Store original image
+        T_Image_Original = hnd.CopyImage();
+        
+        origin_x = T_Image_Original.Width() / 2;
+        origin_y = T_Image_Original.Height() / 2;
+        
+        // Calculate radius from center of image
+        radius = sqrt(
+            pow(abs(origin_y - event.pos().y()), 2.0) +
+            pow(abs(origin_x - event.pos().x()), 2.0)
+        );
+        
+        // Store lower bound
+        lower_bound = radius;
+    }
+
+    // Left click drag OR initial press
+    if ((event.button() == Qt::NoButton && event.buttons() & Qt::LeftButton)
+        || (event.button() == Qt::LeftButton
+            && event.buttons() & Qt::LeftButton
+            && !(T_Mouse_Buttons & Qt::LeftButton)))
+    {
+        // Draw circle on stored original image
+        Image copy = T_Image_Original;
+        
+        origin_x = copy.Width() / 2;
+        origin_y = copy.Height() / 2;
+        
+        // Calculate distance from mouse to center of image
+        radius = sqrt(
+            pow(abs(origin_y - event.pos().y()), 2.0) +
+            pow(abs(origin_x - event.pos().x()), 2.0)
+        );
+        
+        // Draw inverted circles on image
+        drawCircle(copy, origin_x, origin_y, radius, 1.0);
+        drawCircle(copy, origin_x, origin_y, lower_bound, 1.0);
+        
+        // Apply changes to our main image
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+    
+    // Release
+    if (event.button() == Qt::LeftButton
+        && !(event.buttons() & Qt::LeftButton)
+        && T_Mouse_Buttons & Qt::LeftButton)
+    {
+        // Work with copy of original image
+        Image copy = T_Image_Original;
+        
+        origin_x = copy.Width() / 2;
+        origin_y = copy.Height() / 2;
+        
+        // Calculate distance from mouse to center of image
+        radius = sqrt(
+            pow(abs(origin_y - event.pos().y()), 2.0) +
+            pow(abs(origin_x - event.pos().x()), 2.0)
+        );
+        
+        // Make sure lower_bound is min radius and upper_bound is max radius
+        upper_bound = MAX(radius, lower_bound);
+        lower_bound = MIN(radius, lower_bound);
+        middl_bound = (upper_bound + lower_bound) / 2.0;
+        
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Choose mode");
+        msgBox.setText("Gaussian or Ideal? (Yes for Gaussian)");
+        msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        
+        int result = msgBox.exec();
+        
+        // If user cancelled out, cancel everything
+        if (result == QMessageBox::Cancel)
+        {
+            hnd.CopyImage() = T_Image_Original;
+            T_Mouse_Buttons = event.buttons();
+            return true;
+        }
+        
+        ideal = (result == QMessageBox::No);
+        
+        if (!ideal)
+        {
+            radius_div = pow(upper_bound - lower_bound, 2.0) * 2.0;
+        }
+        
+        // Zero out any pixel inside band range
+        for (y = 0; y < copy.Height(); y++)
+        {
+            for (x = 0; x < copy.Width(); x++)
+            {
+                radius = sqrt(
+                    pow(abs((double) origin_y - y), 2.0) +
+                    pow(abs((double) origin_x - x), 2.0)
+                );
+                
+                if (ideal)
+                {
+                    if (lower_bound <= radius && radius <= upper_bound)
+                    {
+                        copy[y][x].SetIntensity(0);
+                        
+                        T_Image_Freal
+                            [(y + origin_y) % copy.Height()]
+                            [(x + origin_x) % copy.Width()] = 0;
+                        T_Image_Fimag
+                            [(y + origin_y) % copy.Height()]
+                            [(x + origin_x) % copy.Width()] = 0;
+                    }
+                }
+                else
+                {
+                    // exp(-pow(abs(radius - middl_bound), 2.0) / radius_div)
+                    adjustment = abs(radius - middl_bound);
+                    adjustment *= adjustment;
+                    adjustment *= -1;
+                    adjustment /= radius_div;
+                    adjustment = exp(adjustment);
+                    adjustment = 1.0 - adjustment;    // invert gaussian blur
+                    
+                    copy[y][x] = copy[y][x] * adjustment;
+                        
+                    T_Image_Freal
+                        [(y + origin_y) % copy.Height()]
+                        [(x + origin_x) % copy.Width()] *= adjustment;
+                    T_Image_Fimag
+                        [(y + origin_y) % copy.Height()]
+                        [(x + origin_x) % copy.Width()] *= adjustment;
+                }
+            }
+        }
+        
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+    
+    T_Mouse_Buttons = event.buttons();
+    return false;
+}
+
+/***************************************************************************//**
+ * Menu_SpotRejectFilter
+ * Author - Daniel Andrus
+ *
+ * Allows the user to interactivly remove spots of frequency data from an image.
+ * Users can use this to manually remove periodic noise from an image
+ *
+ * Parameters
+ *          hnd - Handle for the image object to manipulate
+ *          event - The mouse event object containing event data
+ *
+ * Returns
+ *          True if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_SpotRejectFilter( ImageHnd &hnd, QMouseEvent event )
+{
+    if (!T_Frequency_Set) return false;
+
     int origin_x;
     int origin_y;
 
