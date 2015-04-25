@@ -31,6 +31,11 @@
  ******************************************************************************/
 bool NoiseSmoothing::Menu_LowPass( ImageHnd &hnd, QMouseEvent event )
 {
+    // Static variables for keeping track of stuff across runs
+    // Prevents us from using global variables
+    static Image T_Image_Original;
+    static int T_Mouse_Buttons;
+    
     Image copy;    
     
     double radius_div;
@@ -199,6 +204,11 @@ bool NoiseSmoothing::Menu_LowPass( ImageHnd &hnd, QMouseEvent event )
  ******************************************************************************/
 bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
 {
+    // Static variables for keeping track of stuff across runs
+    // Prevents us from using global variables
+    static Image T_Image_Original;
+    static int T_Mouse_Buttons;
+    
     static const int preview_radius = 5;
     
     Image copy;
@@ -274,7 +284,6 @@ bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
         origin_y = copy.Height() / 2;
         
         // Calculate distance from mouse to center of image
-        rad;
         radius = 1;
         intensity = 0.5;
 

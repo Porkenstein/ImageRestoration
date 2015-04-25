@@ -27,10 +27,6 @@ using namespace std;
 extern float ** T_Image_Freal;
 extern float ** T_Image_Fimag;
 extern Image T_Image_Spatial;
-extern int T_Mouse_X;
-extern int T_Mouse_Y;
-extern int T_Mouse_Buttons;
-extern Image T_Image_Original;
 extern bool T_Frequency_Set;
 
 void drawCircle(Image& image, int x, int y, int radius, double thickness);

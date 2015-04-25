@@ -165,12 +165,15 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
  ******************************************************************************/
 bool Filters::Menu_BandReject( ImageHnd &hnd, QMouseEvent event )
 {
-    // Static variables for keeping track of radii across runs
-    // Prevents us from using global variables
+    // Static variables for keeping track of stuff across runs
+    // Prevents us from using global var
+    static Image T_Image_Original;
+    static int T_Mouse_Buttons;
+    
     static double lower_bound;
     static double upper_bound;
     static double middl_bound;
-
+    
     Image copy;
     
     int origin_x;
@@ -363,6 +366,13 @@ bool Filters::Menu_BandReject( ImageHnd &hnd, QMouseEvent event )
  ******************************************************************************/
 bool Filters::Menu_SpotReject( ImageHnd &hnd, QMouseEvent event )
 {
+    // Static variables for keeping track of stuff across runs
+    // Prevents us from using global variables
+    static Image T_Image_Original;
+    static int T_Mouse_X;
+    static int T_Mouse_Y;
+    static int T_Mouse_Buttons;
+    
     Image copy;
 
     double radius_div;
