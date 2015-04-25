@@ -9,9 +9,6 @@
  ******************************************************************************/
 
 #include "Filters.h"
-#include <iostream>
-#include <QMessageBox>
-using namespace std;
 
 /***************************************************************************//**
  * Menu_Filters_FourierTransform
