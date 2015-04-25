@@ -152,9 +152,9 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
  *
  * Allows the user to interactivally apply a band-reject filter on the frequency
  * data of an image. After using the mouse to specify a band range, the user
- * asks whether to use a Gaussian function or an ideal band-pass filter. Then
- * applies either an ideal band-pass filter or a Gaussian band-pass filter based
- * on the user's choise.
+ * asks whether to use a Gaussian function or an ideal band-reject filter. Then
+ * applies either an ideal band-pass filter or a Gaussian band-reject filter
+ * based on the user's choise.
  *
  * Parameters
  *          hnd - Handle for the image object to manipulate
