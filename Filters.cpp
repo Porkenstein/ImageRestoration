@@ -176,6 +176,7 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
 
     int origin_x;
     int origin_y;
+    bool ideal;
     
     double radius;
     double radius_div;
@@ -183,7 +184,6 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
     
     unsigned int x;
     unsigned int y;
-    bool ideal;
     
     
     // Only work with Fourier transformed images
@@ -263,12 +263,16 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
         lower_bound = MIN(radius, lower_bound);
         middl_bound = (upper_bound + lower_bound) / 2.0;
         
+        // Ask user whether or not to use Gaussian or ideal band-pass filter
         QMessageBox msgBox;
         msgBox.setWindowTitle("Choose mode");
         msgBox.setText("Gaussian or Ideal? (Yes for Gaussian)");
-        msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        msgBox.setStandardButtons(QMessageBox::Yes
+                                  |QMessageBox::No
+                                  |QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Yes);
         
+        // Display popup box to user
         int result = msgBox.exec();
         
         // If user cancelled out, cancel everything
@@ -281,12 +285,13 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
         
         ideal = (result == QMessageBox::No);
         
+        // Calculate divisor for gaussian reject filter
         if (!ideal)
         {
             radius_div = pow(upper_bound - lower_bound, 2.0) * 2.0;
         }
         
-        // Zero out any pixel inside band range
+        // Apply band-reject fitler to image
         for (y = 0; y < copy.Height(); y++)
         {
             for (x = 0; x < copy.Width(); x++)
@@ -298,6 +303,7 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
                 
                 if (ideal)
                 {
+                    // Zero out all data within band
                     if (lower_bound <= radius && radius <= upper_bound)
                     {
                         copy[y][x].SetIntensity(0);
@@ -320,6 +326,7 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
                     adjustment = exp(adjustment);
                     adjustment = 1.0 - adjustment;    // invert gaussian blur
                     
+                    // Apply adjustment (using Gaussian function) to data
                     copy[y][x] = copy[y][x] * adjustment;
                         
                     T_Image_Freal
