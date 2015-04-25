@@ -32,7 +32,7 @@ class Filters : public QObject
     bool Menu_Filters_WienerFilter(Image& image);
     bool Menu_Filters_InverseFilter(Image& image);
     bool Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event );
-    bool Menu_SpotRejectFilter( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_SpotReject( ImageHnd &hnd, QMouseEvent event );
 
 };
 

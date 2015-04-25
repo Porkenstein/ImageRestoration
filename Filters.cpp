@@ -174,6 +174,8 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
     static double upper_bound;
     static double middl_bound;
 
+    Image copy;
+    
     int origin_x;
     int origin_y;
     bool ideal;
@@ -220,7 +222,7 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
             && !(T_Mouse_Buttons & Qt::LeftButton)))
     {
         // Draw circle on stored original image
-        Image copy = T_Image_Original;
+        copy = T_Image_Original;
         
         origin_x = copy.Width() / 2;
         origin_y = copy.Height() / 2;
@@ -247,7 +249,7 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
         && T_Mouse_Buttons & Qt::LeftButton)
     {
         // Work with copy of original image
-        Image copy = T_Image_Original;
+        copy = T_Image_Original;
         
         origin_x = copy.Width() / 2;
         origin_y = copy.Height() / 2;
@@ -362,12 +364,26 @@ bool Filters::Menu_Filters_BandReject( ImageHnd &hnd, QMouseEvent event )
  * Returns
  *          True if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_SpotRejectFilter( ImageHnd &hnd, QMouseEvent event )
+bool Filters::Menu_SpotReject( ImageHnd &hnd, QMouseEvent event )
 {
-    if (!T_Frequency_Set) return false;
+    Image copy;
+
+    double radius_div;
+    double radius;
+    double rad;
+    float adjustment;
 
     int origin_x;
     int origin_y;
+    
+    unsigned int x;
+    unsigned int y;
+    
+    // Only work with Fourier transformed images
+    if (!T_Frequency_Set)
+    {
+        return false;
+    }
 
     // Initial press
     if (event.button() == Qt::LeftButton
@@ -388,9 +404,12 @@ bool Filters::Menu_SpotRejectFilter( ImageHnd &hnd, QMouseEvent event )
             && !(T_Mouse_Buttons & Qt::LeftButton)))
     {
         // Draw circle on original image
-        Image copy = T_Image_Original;
+        copy = T_Image_Original;
 
-        double radius = sqrt(pow(T_Mouse_X - event.pos().x(), 2) + pow(T_Mouse_Y - event.pos().y(), 2));
+        radius = sqrt(
+            pow(T_Mouse_X - event.pos().x(), 2) +
+            pow(T_Mouse_Y - event.pos().y(), 2)
+        );
         drawCircle(copy, T_Mouse_X, T_Mouse_Y, radius, 1.0);
 
         hnd.CopyImage() = copy;
@@ -404,23 +423,21 @@ bool Filters::Menu_SpotRejectFilter( ImageHnd &hnd, QMouseEvent event )
       && T_Mouse_Buttons & Qt::LeftButton)
     {
         // Draw circle on original image
-        Image copy = T_Image_Original;
+        copy = T_Image_Original;
 
         origin_x = copy.Width() / 2;
         origin_y = copy.Height() / 2;
 
-        double rad;
-        double radius = sqrt(
+        radius = sqrt(
             pow(T_Mouse_X - event.pos().x(), 2) +
             pow(T_Mouse_Y - event.pos().y(), 2)
         );
-        double radius_div = pow(radius, 2.0) * 2.0;
-        float adjustment;
+        radius_div = pow(radius, 2.0) * 2.0;
         
         // Gaussian removal
-        for (unsigned int y = 0; y < copy.Height(); y++)
+        for (y = 0; y < copy.Height(); y++)
         {
-            for (unsigned int x = 0; x < copy.Width(); x++)
+            for (x = 0; x < copy.Width(); x++)
             {
                 rad = sqrt(
                     pow(abs((double) (T_Mouse_X - (int) x)), 2.0) +
