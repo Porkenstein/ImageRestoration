@@ -5,7 +5,7 @@
 - **Meeting Time &amp; Place:** 9:00 am M-W-F in McLaury 305
 - **Authors:** Derek Stotz, Dan Andrus (QtImageLib by Dr. John Weiss)
 - **Last Modified:** Apr 26, 2015
-- **Compiling:** Run qmake to compile.
+- **Compiling:** Run `qmake` to build makefile, then `make` to compile program.
 - **Usage:**   ./prog3
 
 ## Details

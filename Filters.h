@@ -10,6 +10,7 @@
 
 #pragma once
 #include "Toolbox.h"
+#include <QMessageBox>
 
 /***************************************************************************//**
  * Filters
@@ -31,7 +32,8 @@ class Filters : public QObject
     bool Menu_Transform_InverseFourierTransform(Image& image);
     bool Menu_Filters_WienerFilter(Image& image);
     bool Menu_Filters_InverseFilter(Image& image);
-    bool Menu_Filters_BandRejectFilter(Image& image, QPoint pt);
+    bool Menu_BandPass( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_BandReject( ImageHnd &hnd, QMouseEvent event );
 
 };
 
