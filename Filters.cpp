@@ -147,7 +147,7 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
 }
 
 /***************************************************************************//**
- * Menu_BandReject
+ * Menu_BandPass
  * Author - Daniel Andrus
  *
  * Allows the user to interactivally apply a band-reject filter on the frequency
@@ -163,7 +163,7 @@ bool Filters::Menu_Filters_InverseFilter(Image& image)
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_BandReject( ImageHnd &hnd, QMouseEvent event )
+bool Filters::Menu_BandPass( ImageHnd &hnd, QMouseEvent event )
 {
     // Static variables for keeping track of stuff across runs
     // Prevents us from using global var
@@ -351,7 +351,7 @@ bool Filters::Menu_BandReject( ImageHnd &hnd, QMouseEvent event )
 }
 
 /***************************************************************************//**
- * Menu_SpotReject
+ * Menu_BandReject
  * Author - Daniel Andrus
  *
  * Allows the user to interactivly remove spots of frequency data from an image.
@@ -364,7 +364,7 @@ bool Filters::Menu_BandReject( ImageHnd &hnd, QMouseEvent event )
  * Returns
  *          True if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_SpotReject( ImageHnd &hnd, QMouseEvent event )
+bool Filters::Menu_BandReject( ImageHnd &hnd, QMouseEvent event )
 {
     // Static variables for keeping track of stuff across runs
     // Prevents us from using global variables
