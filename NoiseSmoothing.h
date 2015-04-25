@@ -10,6 +10,7 @@
 
 #pragma once
 #include "Toolbox.h"
+#include <QMessageBox>
 
 /***************************************************************************//**
  * NoiseSmoothing
@@ -26,8 +27,7 @@ class NoiseSmoothing : public QObject
   Q_OBJECT;
 
   public slots:
-    bool Menu_NoiseAndSmoothing_IdealLPF( ImageHnd &hnd, QMouseEvent event );
-    bool Menu_NoiseAndSmoothing_GaussianLPF( ImageHnd &hnd, QMouseEvent event );
-    bool Menu_NoiseAndSmoothing_AddNoise( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_LowPass( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_AddNoise( ImageHnd &hnd, QMouseEvent event );
 };
 
