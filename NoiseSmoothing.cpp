@@ -200,8 +200,21 @@ bool NoiseSmoothing::Menu_LowPass( ImageHnd &hnd, QMouseEvent event )
 bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
 {
     static const int preview_radius = 5;
+    
+    Image copy;
+    
     int origin_x;
     int origin_y;
+    
+    double rad;
+    double radius;
+    double intensity;
+    
+    unsigned int x;
+    unsigned int y;
+    int r;
+    int c;
+    
     
     // Only work with Fourier transformed images
     if (!T_Frequency_Set)
@@ -225,7 +238,7 @@ bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
             && !(T_Mouse_Buttons & Qt::LeftButton)))
     {
         // Draw circle on stored original image
-        Image copy = T_Image_Original;
+        copy = T_Image_Original;
         
         origin_x = copy.Width() / 2;
         origin_y = copy.Height() / 2;
@@ -255,15 +268,15 @@ bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
         && T_Mouse_Buttons & Qt::LeftButton)
     {
         // Work with copy of original image
-        Image copy = T_Image_Original;
+        copy = T_Image_Original;
         
         origin_x = copy.Width() / 2;
         origin_y = copy.Height() / 2;
         
         // Calculate distance from mouse to center of image
-        double rad;
-        double radius = 1;
-        double intensity = 0.5;
+        rad;
+        radius = 1;
+        intensity = 0.5;
 
         if (!Dialog("Size of Periodic Noise").Add(radius, "Radius").Show()
             || !Dialog("Intensity of Noise").Add(intensity, "Intensity", 0.0, 1.0).Show())
@@ -272,12 +285,12 @@ bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
         }
         else
         {
-            for (unsigned int y = (unsigned int) (event.pos().y() - radius - 1);
-                y < (unsigned int) (event.pos().y() + (int) radius + 1);
+            for (y = (unsigned int) (event.pos().y() - radius - 1);
+                y < (unsigned int) (event.pos().y() + radius + 1);
                 y++)
             {
-                for (unsigned int x = (unsigned int) (event.pos().x() - radius - 1);
-                    x < (unsigned int) (event.pos().x() + (int) radius + 1);
+                for (x = (unsigned int) (event.pos().x() - radius - 1);
+                    x < (unsigned int) (event.pos().x() + radius + 1);
                     x++)
                 {
                     rad = sqrt(
@@ -286,8 +299,6 @@ bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
                     );
                     if (rad <= radius)
                     {
-                        int r,c;
-                        
                         r = y;
                         c = x;
                     
