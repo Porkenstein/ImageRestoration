@@ -115,7 +115,9 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
  ******************************************************************************/
 bool Filters::Menu_Filters_WienerFilter(Image& image)
 {
-  // TODO
+
+
+
   image.Height();
   return false;
 }
@@ -136,7 +138,16 @@ bool Filters::Menu_Filters_WienerFilter(Image& image)
  ******************************************************************************/
 bool Filters::Menu_Filters_InverseFilter(Image& image)
 {
-  // TODO
+  // get threshold via a promt to the user
+  // get cutoff frequency from the user
+
+  // assumes deblurring - use a GLPF for H
+
+  // if abs(f(u,v)) <= 1/threshold
+  //   multiply the frequency value by threshold * abs(f(u,v))/f(u,v)
+  // else
+  //   multiply the frequency value by 1/(e^(-(D(u,v))^2 / 2 * (cutoff^2) ))
+
   image.Height();
   return false;
 }
