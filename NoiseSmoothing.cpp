@@ -477,3 +477,27 @@ bool NoiseSmoothing::Menu_AddNoise( ImageHnd &hnd, QMouseEvent event )
     return false;
 }
 
+/***************************************************************************//**
+ * Menu_Noise_GaussianNoise
+ * Author - Derek Stotz
+ *
+ * Adds Gaussian Noise to an image.  Asks the user for a standard devaition.
+ *
+ * Parameters -
+            image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool NoiseSmoothing::Menu_Noise_GaussianNoise(Image &image)
+{
+    double stddev = 15.0;
+
+    // Propt user for standard deviation
+    if (!Dialog("Gaussian Noise").Add(stddev, "Standard Deviation").Show())
+      return false;
+
+   gaussianNoise(image, stddev);
+   return true;
+}
+

@@ -30,5 +30,6 @@ class NoiseSmoothing : public QObject
     bool Menu_LowPass( ImageHnd &hnd, QMouseEvent event );
     bool Menu_SpecifiedLowPass( Image &image);
     bool Menu_AddNoise( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_Noise_GaussianNoise(Image &image);
 };
 
