@@ -12,9 +12,9 @@ Authors: Derek Stotz, Dan Andrus (QtImageLib by Dr. John Weiss)
 
 Last Modified: Apr 26, 2015
 
-Compiling: Run qmake to compile.
+Compiling: Run qmake to build makefile, then make to compile program.
 
-Usage:   ./prog3
+Usage:   prog3
 
 Details - The purpose of this assignment was to implement many of the image
  *         restoration techniques described in class.  Since the GUI elements
