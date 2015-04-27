@@ -30,10 +30,10 @@ class Filters : public QObject
   public slots:
     bool Menu_Transform_FourierTransform(Image& image);
     bool Menu_Transform_InverseFourierTransform(Image& image);
-    bool Menu_Filters_WienerFilter(Image& image);
+    //bool Menu_Filters_WienerFilter(Image& image);
     bool Menu_Filters_InverseFilter(ImageHnd& hnd, QMouseEvent event);
+    bool Menu_Filters_SpecifiedInverseFilter(Image& image);
     bool Menu_BandPass( ImageHnd &hnd, QMouseEvent event );
     bool Menu_BandReject( ImageHnd &hnd, QMouseEvent event );
-
 };
 

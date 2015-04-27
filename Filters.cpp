@@ -104,6 +104,7 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
     return true;
 }
 
+
 /***************************************************************************//**
  * Menu_Filters_WienerFilter
  * Author - Derek Stotz
@@ -118,22 +119,145 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-bool Filters::Menu_Filters_WienerFilter(Image& image)
+/*bool Filters::Menu_Filters_WienerFilter(Image& image)
 {
+    unsigned int x;
+    unsigned int y;
+
+    double threshold = 1000000;
+    double Hyx;
+    double Wyx;
+    double K;
+
+    // Static variables for keeping track of stuff across runs
+    // Prevents us from using global variables
+    static Image T_Image_Original;
+    static int T_Mouse_Buttons;
+
+    Image copy;
+    double radius;
+    double D;
+    int origin_x;
+    int origin_y;
+
+    // Only work with Fourier transformed images
+    if (!T_Frequency_Set)
+    {
+      return false;
+    }
+
+    // Initial press
+    if (event.button() == Qt::LeftButton
+        && event.buttons() & Qt::LeftButton
+        && !(T_Mouse_Buttons & Qt::LeftButton))
+    {
+        // Store original image
+        T_Image_Original = hnd.CopyImage();
+    }
+
+    // Left click drag OR initial press
+    if ((event.button() == Qt::NoButton && event.buttons() & Qt::LeftButton)
+        || (event.button() == Qt::LeftButton
+            && event.buttons() & Qt::LeftButton
+            && !(T_Mouse_Buttons & Qt::LeftButton)))
+    {
+        // Draw circle on stored original image
+        copy = T_Image_Original;
+
+        origin_x = copy.Width() / 2;
+        origin_y = copy.Height() / 2;
+
+        // Calculate distance from mouse to center of image
+        radius = sqrt(
+            pow(abs(origin_y - event.pos().y()), 2.0) +
+            pow(abs(origin_x - event.pos().x()), 2.0)
+        );
+
+        // Draw an inverted circle on the image
+        drawCircle(copy, origin_x, origin_y, radius, 1.0);
+
+        // Apply changes to our main image
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+
+    // Release
+    if (event.button() == Qt::LeftButton
+        && !(event.buttons() & Qt::LeftButton)
+        && T_Mouse_Buttons & Qt::LeftButton)
+    {
+        // Work with copy of original image
+        copy = T_Image_Original;
+
+        origin_x = copy.Width() / 2;
+        origin_y = copy.Height() / 2;
+
+        // Calculate distance from mouse to center of image
+        radius = sqrt(
+            pow(abs(origin_y - event.pos().y()), 2.0) +
+            pow(abs(origin_x - event.pos().x()), 2.0)
+        );
+
+
+        // apply inverse filter
+        for (y = 0; y < copy.Height(); y++)
+        {
+            for (x = 0; x < copy.Width(); x++)
+            {
+                // Calculate D of this point
+                D = sqrt(
+                    pow(abs((double)origin_y - y), 2.0) +
+                    pow(abs((double)origin_x - x), 2.0)
+                );
+
+
+                // Wuv = (1/Huv_real) * ((Huv_real + Huv_imag)/(Huv_real + Huv_imag + K))
+                // T_Image_Freal[u][v] = Wuv * T_Image_Freal[u][v]
+                // T_Image_Fimag[u][v] = Wuv * T_Image_Fimag[u][v]
 
 
 
-  image.Height();
+                // the gaussian degradation function for Freal
+                Hyx = exp( (-1 * pow(D, 2) ) / (2.0 * pow(radius, 2)) );
+                if (Hyx == 0 || 1.0/Hyx > threshold)
+                {
+                    // want to avoid dividing by Hyx
+                    if(Hyx < 0)
+                    {
+                      T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold;
+                      T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold;
+                    }
+                    else
+                    {
+                      T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold;
+                      T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold;
+                    }
+                }
+                else
+                {
+                    T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= 1.0 / Hyx;
+                    T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= 1.0 / Hyx;
+                }
+            }
+        }
+
+        hnd.CopyImage() = copy;
+        T_Mouse_Buttons = event.buttons();
+        return true;
+    }
+
+    T_Mouse_Buttons = event.buttons();
+
   return false;
 }
-
+*/
 /***************************************************************************//**
  * Menu_Filters_InverseFilter
  * Author - Derek Stotz
  *
- * Prompts the user for a cutoff frequency in the image (assuming some kind of blurring
- * operation was applied) and a threshold for precision (which should ideally be a very
- * small floating point number).
+ * Interactively gets a cutoff frequency from the user (assuming some kind of blurring
+ * operation was applied) via mouse input, similar to the Low Pass Filter.
  *
  * An inverse filter assuming a gaussian blur is then applied to the image, resulting
  * in a partial reversal of blurring.  Information is still lost, and this will not
@@ -280,6 +404,101 @@ bool Filters::Menu_Filters_InverseFilter(ImageHnd& hnd, QMouseEvent event)
   T_Mouse_Buttons = event.buttons();
 
   return false;
+
+}
+
+/***************************************************************************//**
+ * Menu_Filters_SpecifiedInverseFilter
+ * Author - Derek Stotz
+ *
+ * Prompts the user for a cutoff frequency in the image (assuming some kind of blurring
+ * operation was applied).
+ *
+ * An inverse filter assuming a gaussian blur is then applied to the image, resulting
+ * in a partial reversal of blurring.  Information is still lost, and this will not
+ * always reflect general blurs, but it's a good estimation.
+ *
+ * To avoid dividing by zero, a threshold is used when calculating the inverse filter.
+ *
+ * Parameters -
+ *          image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_Filters_SpecifiedInverseFilter(Image& image)
+{
+  // get threshold via a promt to the user
+  // get cutoff frequency from the user
+
+  // assumes deblurring - use a GLPF for H
+
+  // if abs(f(u,v)) <= 1/threshold
+  //   multiply the frequency value by threshold * abs(f(u,v))/f(u,v)
+  // else
+  //   multiply the frequency value by 1/(e^(-(D(u,v))^2 / 2 * (cutoff^2) ))
+
+  unsigned int x;
+  unsigned int y;
+
+  double threshold = 1000000;
+  double Hyx;
+
+  // Static variables for keeping track of stuff across runs
+  // Prevents us from using global variables
+
+  Image copy;
+  double radius;
+  double D;
+  int origin_x;
+  int origin_y;
+
+  // Work with copy of original image
+  copy = image;
+
+  origin_x = copy.Width() / 2;
+  origin_y = copy.Height() / 2;
+
+  if (!Dialog("Cutoff Frequency").Add(radius, "Frequency").Show())
+      return false;
+
+  // apply inverse filter
+  for (y = 0; y < copy.Height(); y++)
+  {
+      for (x = 0; x < copy.Width(); x++)
+      {
+          // Calculate D of this point
+          D = sqrt(
+              pow(abs((double)origin_y - y), 2.0) +
+              pow(abs((double)origin_x - x), 2.0)
+          );
+
+
+          // the gaussian degradation function for Freal
+          Hyx = exp( (-1 * pow(D, 2) ) / (2.0 * pow(radius, 2)) );
+          if (Hyx == 0 || 1.0/Hyx > threshold)
+          {
+              // want to avoid dividing by Hyx
+              if(Hyx < 0)
+              {
+                T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold;
+                T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold;
+              }
+              else
+              {
+                T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold;
+                T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold;
+              }
+          }
+          else
+          {
+              T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= 1.0 / Hyx;
+              T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= 1.0 / Hyx;
+          }
+      }
+  }
+
+  return true;
 
 }
 

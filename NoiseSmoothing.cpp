@@ -183,10 +183,128 @@ bool NoiseSmoothing::Menu_LowPass( ImageHnd &hnd, QMouseEvent event )
         T_Mouse_Buttons = event.buttons();
         return true;
     }
-    
+
     T_Mouse_Buttons = event.buttons();
     
     return false;
+}
+
+/***************************************************************************//**
+ * Menu_SpecifiedLowPass
+ * Author - Dan Andrus, Derek Stotz
+ *
+ * Smooths an image by transforming it into the frequency domain and applying
+ * a low-pass filter to the frequency information. Gets the cutoff frequency from
+ * the user. Asks the user whether to use an ideal or gaussian low-pass filter.
+ *
+ * Parameters
+ *          image - The image object
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool NoiseSmoothing::Menu_SpecifiedLowPass( Image &image )
+{
+    // Static variables for keeping track of stuff across runs
+    // Prevents us from using global variables
+
+    Image copy;
+
+    double radius_div;
+    double radius;
+    double r;
+    float adjustment;
+
+    int origin_x;
+    int origin_y;
+    bool ideal;
+
+    unsigned int x;
+    unsigned int y;
+
+    // Only work with Fourier transformed images
+    if (!T_Frequency_Set)
+    {
+      return false;
+    }
+
+    // Work with copy of original image
+    copy = image;
+
+    origin_x = copy.Width() / 2;
+    origin_y = copy.Height() / 2;
+
+    if (!Dialog("Cutoff Frequency").Add(radius, "Frequency").Show())
+        return false;
+
+    // Ask user whether or not to use Gaussian or ideal band-pass filter
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Choose mode");
+    msgBox.setText("Gaussian or Ideal? (Yes for Gaussian)");
+    msgBox.setStandardButtons(QMessageBox::Yes
+                              |QMessageBox::No
+                              |QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+
+    // Display popup box to user
+    int result = msgBox.exec();
+
+    // If user cancelled out, cancel everything
+    if (result == QMessageBox::Cancel)
+    {
+        return false;
+    }
+
+    ideal = (result == QMessageBox::No);
+
+    // Calculate divisor for gaussian reject filter
+    if (!ideal)
+    {
+        radius_div = pow(radius, 2.0) * 2.0;
+    }
+
+    // Apply low-pass filter to data
+    for (y = 0; y < copy.Height(); y++)
+    {
+        for (x = 0; x < copy.Width(); x++)
+        {
+            r = sqrt(
+                pow(abs((double) origin_y - y), 2.0) +
+                pow(abs((double) origin_x - x), 2.0)
+            );
+
+            if (ideal)
+            {
+                // Zero out data outside of range
+                if (r > radius)
+                {
+                    copy[y][x].SetIntensity(0);
+
+                    T_Image_Freal
+                        [(y + origin_y) % copy.Height()]
+                        [(x + origin_x) % copy.Width()] = 0;
+                    T_Image_Fimag
+                        [(y + origin_y) % copy.Height()]
+                        [(x + origin_x) % copy.Width()] = 0;
+                }
+            }
+            else
+            {
+                // Apply Gaussian adjustment to imagebased on range
+                adjustment = exp(-pow(r, 2.0) / radius_div);
+
+                copy[y][x] = copy[y][x] * adjustment;
+
+                T_Image_Freal
+                    [(y + origin_y) % copy.Height()]
+                    [(x + origin_x) % copy.Width()] *= adjustment;
+                T_Image_Fimag
+                    [(y + origin_y) % copy.Height()]
+                    [(x + origin_x) % copy.Width()] *= adjustment;
+            }
+        }
+    }
+    return true;
 }
 
 /***************************************************************************//**

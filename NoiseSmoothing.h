@@ -28,6 +28,7 @@ class NoiseSmoothing : public QObject
 
   public slots:
     bool Menu_LowPass( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_SpecifiedLowPass( Image &image);
     bool Menu_AddNoise( ImageHnd &hnd, QMouseEvent event );
 };
 
