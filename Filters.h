@@ -34,7 +34,7 @@ class Filters : public QObject
     bool Menu_Filters_WienerFilter(ImageHnd& hnd, QMouseEvent event);
     bool Menu_Filters_InverseFilter(ImageHnd& hnd, QMouseEvent event);
     bool Menu_Filters_SpecifiedInverseFilter(Image& image);
-    bool Menu_BandPass( ImageHnd &hnd, QMouseEvent event );
     bool Menu_BandReject( ImageHnd &hnd, QMouseEvent event );
+    bool Menu_SpotReject( ImageHnd &hnd, QMouseEvent event );
 };
 
