@@ -109,9 +109,15 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
  * Menu_Filters_WienerFilter
  * Author - Derek Stotz
  *
+ * The user is prompted for a constant K to act as an estimation of the power spectra
+ * of the original image and noise.
  *
+ * A weiner filter assuming a gaussian blur is then applied to the image, resulting
+ * in a partial reversal of blurring, taking into account noise.
+ * Information is still lost, and this will not always reflect general blurs, but it's a
+ * good estimation.
  *
- *
+ * To avoid dividing by zero, a threshold is used when calculating the weiner filter.
  *
  * Parameters -
  *          image - the image object to manipulate.
@@ -119,14 +125,15 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
  * Returns
  *          true if successful, false if not
  ******************************************************************************/
-/*bool Filters::Menu_Filters_WienerFilter(Image& image)
+bool Filters::Menu_Filters_WienerFilter(ImageHnd& hnd, QMouseEvent event)
 {
     unsigned int x;
     unsigned int y;
 
     double threshold = 1000000;
-    double Hyx;
-    double Wyx;
+    double Huv_real;
+    double Huv_imag;
+    double Wuv;
     double K;
 
     // Static variables for keeping track of stuff across runs
@@ -200,7 +207,11 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
         );
 
 
-        // apply inverse filter
+        // get estimate of power spectra
+        if (!Dialog("Power Spectra Estimation").Add(K, "K").Show())
+            return false;
+
+        // apply wiener filter
         for (y = 0; y < copy.Height(); y++)
         {
             for (x = 0; x < copy.Width(); x++)
@@ -211,33 +222,31 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
                     pow(abs((double)origin_x - x), 2.0)
                 );
 
-
-                // Wuv = (1/Huv_real) * ((Huv_real + Huv_imag)/(Huv_real + Huv_imag + K))
-                // T_Image_Freal[u][v] = Wuv * T_Image_Freal[u][v]
-                // T_Image_Fimag[u][v] = Wuv * T_Image_Fimag[u][v]
-
-
+                Huv_real = exp( (-1 * pow(D, 2) ) / (2.0 * pow(radius, 2)) );
+                Huv_imag = 0;
 
                 // the gaussian degradation function for Freal
-                Hyx = exp( (-1 * pow(D, 2) ) / (2.0 * pow(radius, 2)) );
-                if (Hyx == 0 || 1.0/Hyx > threshold)
+
+                Wuv = ((Huv_real * Huv_real + Huv_imag)/(Huv_real * Huv_real + Huv_imag + K));
+
+                if (Huv_real == 0 || 1.0/Huv_real > threshold)
                 {
                     // want to avoid dividing by Hyx
-                    if(Hyx < 0)
+                    if(Huv_real < 0)
                     {
-                      T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold;
-                      T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold;
+                      T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold * Wuv;
+                      T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold * Wuv;
                     }
                     else
                     {
-                      T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold;
-                      T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold;
+                      T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold * Wuv;
+                      T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold * Wuv;
                     }
                 }
                 else
                 {
-                    T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= 1.0 / Hyx;
-                    T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= 1.0 / Hyx;
+                    T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= (1.0 / Huv_real) * Wuv;
+                    T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= (1.0 / Huv_real) * Wuv;
                 }
             }
         }
@@ -251,7 +260,115 @@ bool Filters::Menu_Transform_InverseFourierTransform(Image& image)
 
   return false;
 }
-*/
+
+
+/***************************************************************************//**
+ * Menu_Filters_SpecifiedWienerFilter
+ * Author - Derek Stotz
+ *
+ * Prompts the user for a cutoff frequency in the image (assuming some kind of blurring
+ * operation was applied) and a constant K to be used for an estimation of the power specra.
+ *
+ * A weiner filter assuming a gaussian blur is then applied to the image, resulting
+ * in a partial reversal of blurring, taking into account noise.
+ * Information is still lost, and this will not always reflect general blurs, but it's a
+ * good estimation.
+ *
+ * To avoid dividing by zero, a threshold is used when calculating the weiner filter.
+ *
+ * Parameters -
+ *          image - the image object to manipulate.
+ *
+ * Returns
+ *          true if successful, false if not
+ ******************************************************************************/
+bool Filters::Menu_Filters_SpecifiedWienerFilter(Image& image)
+{
+  // get threshold via a promt to the user
+  // get cutoff frequency from the user
+
+  // assumes deblurring - use a GLPF for H
+
+  // if abs(f(u,v)) <= 1/threshold
+  //   multiply the frequency value by threshold * abs(f(u,v))/f(u,v)
+  // else
+  //   multiply the frequency value by 1/(e^(-(D(u,v))^2 / 2 * (cutoff^2) ))
+
+  unsigned int x;
+  unsigned int y;
+
+  double threshold = 1000000;
+  double Huv_real;
+  double Huv_imag;
+  double Wuv;
+  double K;
+  // Static variables for keeping track of stuff across runs
+  // Prevents us from using global variables
+
+  Image copy;
+  double radius;
+  double D;
+  int origin_x;
+  int origin_y;
+
+  // Work with copy of original image
+  copy = image;
+
+  origin_x = copy.Width() / 2;
+  origin_y = copy.Height() / 2;
+
+  if (!Dialog("Cutoff Frequency").Add(radius, "Frequency").Show())
+      return false;
+
+  // get estimate of power spectra
+  if (!Dialog("Power Spectra Estimation").Add(K, "K").Show())
+      return false;
+
+  // apply wiener filter
+  for (y = 0; y < copy.Height(); y++)
+  {
+      for (x = 0; x < copy.Width(); x++)
+      {
+          // Calculate D of this point
+          D = sqrt(
+              pow(abs((double)origin_y - y), 2.0) +
+              pow(abs((double)origin_x - x), 2.0)
+          );
+
+          Huv_real = exp( (-1 * pow(D, 2) ) / (2.0 * pow(radius, 2)) );
+          Huv_imag = 0;
+
+          // the gaussian degradation function for Freal
+
+          Wuv = ((Huv_real * Huv_real + Huv_imag)/(Huv_real * Huv_real + Huv_imag + K));
+
+          if (Huv_real == 0 || 1.0/Huv_real > threshold)
+          {
+              // want to avoid dividing by Hyx
+              if(Huv_real < 0)
+              {
+                T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold * Wuv;
+                T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= -1 * threshold * Wuv;
+              }
+              else
+              {
+                T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold * Wuv;
+                T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= threshold * Wuv;
+              }
+          }
+          else
+          {
+              T_Image_Freal[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= (1.0 / Huv_real) * Wuv;
+              T_Image_Fimag[(y + origin_y) % copy.Height()][(x + origin_x) % copy.Width()] *= (1.0 / Huv_real) * Wuv;
+          }
+      }
+  }
+
+  return true;
+
+}
+
+
 /***************************************************************************//**
  * Menu_Filters_InverseFilter
  * Author - Derek Stotz
@@ -367,8 +484,8 @@ bool Filters::Menu_Filters_InverseFilter(ImageHnd& hnd, QMouseEvent event)
           {
               // Calculate D of this point
               D = sqrt(
-                  pow(abs((double) (origin_y - y)), 2.0) +
-                  pow(abs((double) (origin_x - x)), 2.0)
+                  pow(abs((double)origin_y - y), 2.0) +
+                  pow(abs((double) origin_x - x), 2.0)
               );
 
 
