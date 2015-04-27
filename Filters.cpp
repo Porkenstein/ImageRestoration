@@ -355,8 +355,8 @@ bool Filters::Menu_Filters_InverseFilter(ImageHnd& hnd, QMouseEvent event)
 
       // Calculate distance from mouse to center of image
       radius = sqrt(
-          pow(abs(origin_y - event.pos().y()), 2.0) +
-          pow(abs(origin_x - event.pos().x()), 2.0)
+          pow(abs((double) (origin_y - event.pos().y())), 2.0) +
+          pow(abs((double) (origin_x - event.pos().x())), 2.0)
       );
 
 
@@ -367,8 +367,8 @@ bool Filters::Menu_Filters_InverseFilter(ImageHnd& hnd, QMouseEvent event)
           {
               // Calculate D of this point
               D = sqrt(
-                  pow(abs((double)origin_y - y), 2.0) +
-                  pow(abs((double)origin_x - x), 2.0)
+                  pow(abs((double) (origin_y - y)), 2.0) +
+                  pow(abs((double) (origin_x - x)), 2.0)
               );
 
 

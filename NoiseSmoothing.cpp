@@ -179,6 +179,8 @@ bool NoiseSmoothing::Menu_LowPass( ImageHnd &hnd, QMouseEvent event )
             }
         }
         
+        cout << "Low-pass radius: " << radius << endl;
+        
         hnd.CopyImage() = copy;
         T_Mouse_Buttons = event.buttons();
         return true;
